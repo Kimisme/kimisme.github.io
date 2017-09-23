@@ -62,7 +62,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Maven," />
 
 
 
@@ -80,14 +80,18 @@
 
 
 
+<meta name="description" content="前言Maven自动生成项目骨架">
+<meta name="keywords" content="Maven">
 <meta property="og:type" content="article">
-<meta property="og:title" content="maven-archetype-plugin">
+<meta property="og:title" content="Maven系列(4)-Archetype插件">
 <meta property="og:url" content="http://kimisme.com/2017/09/23/maven-archetype-plugin/index.html">
 <meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言Maven自动生成项目骨架">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-23T10:07:12.793Z">
+<meta property="og:updated_time" content="2017-09-23T11:30:06.080Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="maven-archetype-plugin">
+<meta name="twitter:title" content="Maven系列(4)-Archetype插件">
+<meta name="twitter:description" content="前言Maven自动生成项目骨架">
 
 
 
@@ -123,7 +127,7 @@
 
 
 
-  <title>maven-archetype-plugin | Think Different</title>
+  <title>Maven系列(4)-Archetype插件 | Think Different</title>
   
 
 
@@ -311,7 +315,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">maven-archetype-plugin</h1>
+          <h1 class="post-title" itemprop="name headline">Maven系列(4)-Archetype插件</h1>
         
 
         <div class="post-meta">
@@ -333,6 +337,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Maven/" itemprop="url" rel="index">
+                    <span itemprop="name">Maven</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -366,7 +392,28 @@
       
 
       
-        
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Maven自动生成项目骨架</p>
+<a id="more"></a>
+<blockquote>
+<p>The Archetype Plugin allows the user to create a Maven project from an existing template called an archetype.</p>
+<p>It also allows the user to create an archetype from an existing project.</p>
+</blockquote>
+<h2 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h2><p>Maven中有许多功能都是通过插件来提供的。<code>maven-archetype-plugin</code>就是Maven的一个插件</p>
+<h2 id="Archetype"><a href="#Archetype" class="headerlink" title="Archetype"></a>Archetype</h2><p>官网对该插件的介绍：<a href="http://maven.apache.org/archetype/maven-archetype-plugin/" target="_blank" rel="external">http://maven.apache.org/archetype/maven-archetype-plugin/</a></p>
+<p>archetype是Maven项目模板工具包，也就是一个模板工程。</p>
+<p>Maven的Repository里提供了500~600个不同类型的archer types</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>执行命令</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> maven03</div><div class="line">mvn archetype:generate -DgroupId=com.kimisme.app -DartifactId=maven03-app -Dversion=<span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span> -DarchetypeArtifactId=maven-archetype-quickstart</div></pre></td></tr></table></figure>
+<p>输出以下内容，表示成功了</p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">[INFO] -------------------------------------------------------------------------</div><div class="line">---</div><div class="line">[INFO] Using following parameters <span class="keyword">for</span> creating project from Old (<span class="number">1</span>.x) Archetype:</div><div class="line"> maven-archetype-quickstart:<span class="number">1</span>.<span class="number">0</span></div><div class="line">[INFO] -------------------------------------------------------------------------</div><div class="line">---</div><div class="line">[INFO] Parameter: basedir, Value: E:\maven03</div><div class="line">[INFO] Parameter: package, Value: com.kimisme.app</div><div class="line">[INFO] Parameter: groupId, Value: com.kimisme.app</div><div class="line">[INFO] Parameter: artifactId, Value: maven03-app</div><div class="line">[INFO] Parameter: packageName, Value: com.kimisme.app</div><div class="line">[INFO] Parameter: version, Value: <span class="number">0</span>.<span class="number">0</span>.<span class="number">0</span></div><div class="line">[INFO] project created from Old (<span class="number">1</span>.x) Archetype <span class="keyword">in</span> <span class="built_in">dir</span>: E:\maven03\maven03-app</div><div class="line">[INFO] ------------------------------------------------------------------------</div><div class="line">[INFO] BUILD SUCCESS</div><div class="line">[INFO] ------------------------------------------------------------------------</div><div class="line">[INFO] Total <span class="built_in">time</span>: <span class="number">01</span>:<span class="number">12</span> min</div><div class="line">[INFO] Finished <span class="built_in">at</span>: <span class="number">2017</span>-<span class="number">09</span>-<span class="number">23</span>T19:<span class="number">22</span>:<span class="number">14</span>+<span class="number">08</span>:<span class="number">00</span></div><div class="line">[INFO] Final Memory: <span class="number">15</span>M/<span class="number">241</span>M</div><div class="line">[INFO] ------------------------------------------------------------------------</div></pre></td></tr></table></figure>
+<h2 id="查看archetype生成的项目"><a href="#查看archetype生成的项目" class="headerlink" title="查看archetype生成的项目"></a>查看archetype生成的项目</h2><p><strong>项目结构如下</strong></p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/maven03-app</div><div class="line">/maven03-app/pom.xml</div><div class="line">/maven03-app/src/main/java/com/kimisme/app/App.java</div><div class="line">/maven03-app/src/test/java/com/kimisme/app/AppTest.java</div></pre></td></tr></table></figure>
+<p><strong>App.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.kimisme.app;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Hello world!</span></div><div class="line"><span class="comment"> *</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">App</span> </span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">( String[] args )</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        System.out.println( <span class="string">"Hello World!"</span> );</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>AppTest.java</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.kimisme.app;</div><div class="line"></div><div class="line"><span class="keyword">import</span> junit.framework.Test;</div><div class="line"><span class="keyword">import</span> junit.framework.TestCase;</div><div class="line"><span class="keyword">import</span> junit.framework.TestSuite;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * Unit test for simple App.</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AppTest</span> </span></div><div class="line"><span class="class">    <span class="keyword">extends</span> <span class="title">TestCase</span></span></div><div class="line"><span class="class"></span>&#123;</div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * Create the test case</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> testName name of the test case</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AppTest</span><span class="params">( String testName )</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        <span class="keyword">super</span>( testName );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> the suite of tests being tested</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Test <span class="title">suite</span><span class="params">()</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> TestSuite( AppTest.class );</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * Rigourous Test :-)</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testApp</span><span class="params">()</span></span></div><div class="line"><span class="function">    </span>&#123;</div><div class="line">        assertTrue( <span class="keyword">true</span> );</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>pom.xml</strong></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">xmlns</span>=<span class="string">"http://maven.apache.org/POM/4.0.0"</span> <span class="attr">xmlns:xsi</span>=<span class="string">"http://www.w3.org/2001/XMLSchema-instance"</span></span></div><div class="line"><span class="tag">  <span class="attr">xsi:schemaLocation</span>=<span class="string">"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">modelVersion</span>&gt;</span>4.0.0<span class="tag">&lt;/<span class="name">modelVersion</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.kimisme.app<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>maven03-app<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>jar<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">name</span>&gt;</span>maven03-app<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://maven.apache.org<span class="tag">&lt;/<span class="name">url</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.8.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></div></pre></td></tr></table></figure>
       
     </div>
     
@@ -380,6 +427,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Maven/" rel="tag"># Maven</a>
+          
+        </div>
       
 
       
@@ -399,6 +452,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/23/maven-ide-integration/" rel="prev" title="Maven系列(5)-Eclipse集成">
+                Maven系列(5)-Eclipse集成 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -450,8 +507,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           
             <img class="site-author-image" itemprop="image"
@@ -469,7 +535,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-count">108</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -537,6 +603,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#插件"><span class="nav-number">2.</span> <span class="nav-text">插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Archetype"><span class="nav-number">3.</span> <span class="nav-text">Archetype</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">4.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看archetype生成的项目"><span class="nav-number">5.</span> <span class="nav-text">查看archetype生成的项目</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

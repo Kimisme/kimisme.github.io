@@ -88,7 +88,7 @@
 <meta property="og:site_name" content="Think Different">
 <meta property="og:description" content="前言介绍Maven的常用命令。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-23T09:43:25.393Z">
+<meta property="og:updated_time" content="2017-09-23T11:28:54.045Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Maven系列(2)-常用命令">
 <meta name="twitter:description" content="前言介绍Maven的常用命令。">
@@ -394,17 +394,14 @@
       
         <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>介绍Maven的常用命令。</p>
 <a id="more"></a>
-<h2 id="Maven项目的默认结构"><a href="#Maven项目的默认结构" class="headerlink" title="Maven项目的默认结构"></a>Maven项目的默认结构</h2><figure class="highlight dos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">--src</div><div class="line">	--main</div><div class="line">		--java</div><div class="line">			--package</div><div class="line">	--test</div><div class="line">		--java</div><div class="line">			--package</div><div class="line">	--resources</div></pre></td></tr></table></figure>
+<h2 id="Maven项目的默认结构"><a href="#Maven项目的默认结构" class="headerlink" title="Maven项目的默认结构"></a>Maven项目的默认结构</h2><figure class="highlight dos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">--src/main/java/package</div><div class="line">--src/test/java/package</div><div class="line">--src/resouces</div></pre></td></tr></table></figure>
 <ul>
 <li>src/main/java：用于存放Java源代码</li>
 <li>src/main/resource：用于存放资源文件</li>
 <li>src/test/java：用于存放测试代码</li>
 </ul>
-<h2 id="创建Maven项目目录"><a href="#创建Maven项目目录" class="headerlink" title="创建Maven项目目录"></a>创建Maven项目目录</h2><p><img src="" alt=""></p>
-<ul>
-<li>该Java项目的名称为maven01</li>
-<li>pom.xml在项目的根目录下</li>
-</ul>
+<h2 id="创建Maven项目目录"><a href="#创建Maven项目目录" class="headerlink" title="创建Maven项目目录"></a>创建Maven项目目录</h2><p><strong>项目结构如下</strong></p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">/maven01-app</div><div class="line">/maven01-app/pom.xml</div><div class="line">/maven01-app/src/main/java/com/kimisme/app/HelloWorld.java</div><div class="line">/maven01-app/src/test/java/com/kimisme/app/HelloWorldTest.java</div></pre></td></tr></table></figure>
 <p><strong>HelloWorld.java</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">package</span> com.kimisme.app;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HelloWorld</span></span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">sayHello</span><span class="params">()</span></span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="string">"Hello World"</span>;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p><strong>HelloWorldTest.java</strong></p>
@@ -552,7 +549,7 @@
             
               <a href="/archives/">
             
-                <span class="site-state-item-count">105</span>
+                <span class="site-state-item-count">108</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
