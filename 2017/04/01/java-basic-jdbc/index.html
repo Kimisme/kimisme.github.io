@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言本文主要告诉你，如果使用源生的jdbc，以及连接池的使用。">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java知识点回顾-jdbc">
+<meta property="og:url" content="http://kimisme.com/2017/04/01/java-basic-jdbc/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言本文主要告诉你，如果使用源生的jdbc，以及连接池的使用。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-09T03:20:36.117Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java知识点回顾-jdbc">
+<meta name="twitter:description" content="前言本文主要告诉你，如果使用源生的jdbc，以及连接池的使用。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/04/01/java-basic-jdbc/"/>
+
+
+
+
+
+  <title>Java知识点回顾-jdbc | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/04/01/java-basic-jdbc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java知识点回顾-jdbc</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-01T09:25:32+08:00">
+                2017-04-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Java-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要告诉你，如果使用源生的jdbc，以及连接池的使用。</p>
+<a id="more"></a>
+<h2 id="使用源生的JDBC操作"><a href="#使用源生的JDBC操作" class="headerlink" title="使用源生的JDBC操作"></a>使用源生的JDBC操作</h2><blockquote>
+<p>sql脚本</p>
+</blockquote>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> t_user</div><div class="line">(</div><div class="line">	<span class="keyword">id</span> <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span> primary <span class="keyword">key</span> auto_increment,</div><div class="line">	username <span class="built_in">char</span>(<span class="number">50</span>),</div><div class="line">	<span class="keyword">password</span> <span class="built_in">char</span>(<span class="number">50</span>)</div><div class="line">)</div></pre></td></tr></table></figure>
+<blockquote>
+<p>增删改</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">demo01</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line">	String driverClassName=<span class="string">"com.mysql.jdbc.Driver"</span>;</div><div class="line">	String url=<span class="string">"jdbc:mysql://localhost:3306/test"</span>;</div><div class="line">	String username=<span class="string">"root"</span>;</div><div class="line">	String password=<span class="string">"123456"</span>;</div><div class="line">	</div><div class="line">	Class.forName(driverClassName);</div><div class="line">	Connection connection = DriverManager.getConnection(url,username,password);</div><div class="line">	</div><div class="line">	Statement statement = connection.createStatement();</div><div class="line">	String sql=<span class="string">"insert into t_user(username,password) values('rose','123')"</span>;</div><div class="line">	<span class="keyword">int</span> count =statement.executeUpdate(sql);</div><div class="line">	System.out.println(count);</div><div class="line">	</div><div class="line">	System.out.println(connection);</div><div class="line">	</div><div class="line">	statement.close();</div><div class="line">	connection.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>查询</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">demo02</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</div><div class="line">	String driverClassName=<span class="string">"com.mysql.jdbc.Driver"</span>;</div><div class="line">	String url=<span class="string">"jdbc:mysql://localhost:3306/test?useSSL=true"</span>;</div><div class="line">	String username=<span class="string">"root"</span>;</div><div class="line">	String password=<span class="string">"123456"</span>;</div><div class="line">	</div><div class="line">	Class.forName(driverClassName);</div><div class="line">	Connection connection = DriverManager.getConnection(url,username,password);</div><div class="line">	</div><div class="line">	Statement statement = connection.createStatement();</div><div class="line">	String sql=<span class="string">"select * from t_user"</span>;</div><div class="line">	ResultSet resultSet = statement.executeQuery(sql);</div><div class="line">	</div><div class="line">	<span class="keyword">while</span>(resultSet.next())&#123;</div><div class="line">		<span class="keyword">int</span> id=resultSet.getInt(<span class="string">"id"</span>);</div><div class="line">		String name=resultSet.getString(<span class="number">2</span>);</div><div class="line">		System.out.println(<span class="string">"id="</span>+id+<span class="string">",name="</span>+name);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	resultSet.close();</div><div class="line">	statement.close();</div><div class="line">	connection.close();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="使用c3p0连接池"><a href="#使用c3p0连接池" class="headerlink" title="使用c3p0连接池"></a>使用c3p0连接池</h2><blockquote>
+<p>项目结构</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">--src/main/java</div><div class="line">----com.tutorial.jdbc.c3p0</div><div class="line">------JdbcUtils.java</div><div class="line">------TestApp.java</div><div class="line">------User.java</div><div class="line">----c3p0-config.xml</div></pre></td></tr></table></figure>
+<blockquote>
+<p>build.gralde</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">compile group: <span class="string">'mysql'</span>, name: <span class="string">'mysql-connector-java'</span>, version: <span class="string">'5.1.38'</span></div><div class="line">compile group: <span class="string">'c3p0'</span>, name: <span class="string">'c3p0'</span>, version: <span class="string">'0.9.1.2'</span></div><div class="line">compile group: <span class="string">'commons-dbutils'</span>, name: <span class="string">'commons-dbutils'</span>, version: <span class="string">'1.6'</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>c3p0-config.xml</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">c3p0-config</span>&gt;</span></div><div class="line">	<span class="comment">&lt;!-- 这是默认配置 --&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">default-config</span>&gt;</span></div><div class="line">		<span class="comment">&lt;!-- 连接四大参数配置 --&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"jdbcUrl"</span>&gt;</span>jdbc:mysql://localhost:3306/test<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"driverClass"</span>&gt;</span>com.mysql.jdbc.Driver<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"user"</span>&gt;</span>root<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"password"</span>&gt;</span>123456<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">		<span class="comment">&lt;!-- 池参数配置 --&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"initialPoolSize"</span>&gt;</span>10<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"minPoolSize"</span>&gt;</span>2<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"maxPoolSize"</span>&gt;</span>10<span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">default-config</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">c3p0-config</span>&gt;</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>User.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> id;</div><div class="line">	<span class="keyword">private</span> String username;</div><div class="line">	<span class="keyword">private</span> String password;</div><div class="line">	</div><div class="line">	<span class="comment">/**</span></div><div class="line"><span class="comment">	 * javabean必须要有无参的构造函数</span></div><div class="line"><span class="comment">	 */</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">User</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">super</span>();</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>JdbcUtils.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JdbcUtils</span> </span>&#123;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">static</span> ComboPooledDataSource dataSource = <span class="keyword">new</span> ComboPooledDataSource();</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Connection <span class="title">getConnection</span><span class="params">()</span><span class="keyword">throws</span> SQLException</span>&#123;		</div><div class="line">		<span class="keyword">return</span> dataSource.getConnection();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DataSource <span class="title">getDataSource</span><span class="params">()</span></span>&#123;</div><div class="line">		<span class="keyword">return</span> dataSource;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>TestApp.java</p>
+</blockquote>
+<p><strong>结果集转javabean</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2JavaBean</span><span class="params">()</span><span class="keyword">throws</span> Exception</span>&#123;                          </div><div class="line">	QueryRunner qr=<span class="keyword">new</span> QueryRunner(JdbcUtils.getDataSource());        </div><div class="line">	String sql=<span class="string">"select * from t_user where id=?"</span>;                     </div><div class="line">	Object[]params=&#123;<span class="number">3</span>&#125;;                                               </div><div class="line">	User user=qr.query(sql, <span class="keyword">new</span> BeanHandler&lt;User&gt;(User.class),params);</div><div class="line">	System.out.println(user);                                         </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>结果集转List</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2List</span><span class="params">()</span><span class="keyword">throws</span> Exception</span>&#123;                                    </div><div class="line">	QueryRunner qr=<span class="keyword">new</span> QueryRunner(JdbcUtils.getDataSource());              </div><div class="line">	String sql=<span class="string">"select * from t_user"</span>;                                      </div><div class="line">	List&lt;User&gt;userList=qr.query(sql, <span class="keyword">new</span> BeanListHandler&lt;User&gt;(User.class));</div><div class="line">	System.out.println(userList);                                           </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>结果集转Map</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2Map</span><span class="params">()</span><span class="keyword">throws</span> Exception</span>&#123;                              </div><div class="line">	QueryRunner qr=<span class="keyword">new</span> QueryRunner(JdbcUtils.getDataSource());       </div><div class="line">	String sql=<span class="string">"select * from t_user where id=?"</span>;                    </div><div class="line">	Object[] params=&#123;<span class="number">1</span>&#125;;                                             </div><div class="line">	Map&lt;String,Object&gt; map=qr.query(sql, <span class="keyword">new</span> MapHandler(),params);   </div><div class="line">	System.out.println(map);                                         </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>结果集转List<map></map></strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2MapList</span><span class="params">()</span><span class="keyword">throws</span> Exception</span>&#123;                              </div><div class="line">	QueryRunner qr=<span class="keyword">new</span> QueryRunner(JdbcUtils.getDataSource());           </div><div class="line">	String sql=<span class="string">"select * from t_user"</span>;                                   </div><div class="line">	List&lt;Map&lt;String, Object&gt;&gt;mapList=qr.query(sql, <span class="keyword">new</span> MapListHandler());</div><div class="line">	System.out.println(mapList);                                         </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>获取单列结果集</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span><span class="keyword">throws</span> Exception</span>&#123;                          </div><div class="line">	QueryRunner qr=<span class="keyword">new</span> QueryRunner(JdbcUtils.getDataSource());</div><div class="line">	String sql=<span class="string">"select count(1) from t_user"</span>;                 </div><div class="line">	Number cnt=qr.query(sql, <span class="keyword">new</span> ScalarHandler&lt;Number&gt;());    </div><div class="line">	<span class="keyword">long</span> c =cnt.longValue();                                  </div><div class="line">	System.out.println(c);                                    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/31/mybatis-getstart/" rel="next" title="MyBatis系列-入门">
+                <i class="fa fa-chevron-left"></i> MyBatis系列-入门
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/01/java-basic-socket/" rel="prev" title="Java知识点回顾-socket">
+                Java知识点回顾-socket <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用源生的JDBC操作"><span class="nav-number">2.</span> <span class="nav-text">使用源生的JDBC操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用c3p0连接池"><span class="nav-number">3.</span> <span class="nav-text">使用c3p0连接池</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

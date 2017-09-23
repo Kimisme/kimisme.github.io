@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="jvm," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言Java虚拟机规范中没有明确描述实现细节，设计者可以自主决定所有规范中不曾描述的虚拟机内部细节。例如：运行时数据区的内存如何布局、选用哪种垃圾收集的算法、是否要对虚拟机字节码指令进行一些内部优化操作。">
+<meta name="keywords" content="jvm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【02】Java虚拟机结构">
+<meta property="og:url" content="http://kimisme.com/2017/03/08/book-jvm-002/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言Java虚拟机规范中没有明确描述实现细节，设计者可以自主决定所有规范中不曾描述的虚拟机内部细节。例如：运行时数据区的内存如何布局、选用哪种垃圾收集的算法、是否要对虚拟机字节码指令进行一些内部优化操作。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-04-09T03:20:36.101Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【02】Java虚拟机结构">
+<meta name="twitter:description" content="前言Java虚拟机规范中没有明确描述实现细节，设计者可以自主决定所有规范中不曾描述的虚拟机内部细节。例如：运行时数据区的内存如何布局、选用哪种垃圾收集的算法、是否要对虚拟机字节码指令进行一些内部优化操作。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/03/08/book-jvm-002/"/>
+
+
+
+
+
+  <title>【02】Java虚拟机结构 | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/03/08/book-jvm-002/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">【02】Java虚拟机结构</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-08T14:35:08+08:00">
+                2017-03-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JVM/" itemprop="url" rel="index">
+                    <span itemprop="name">JVM</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>Java虚拟机规范</code>中没有明确描述实现细节，设计者可以自主决定所有规范中不曾描述的虚拟机内部细节。例如：运行时数据区的内存如何布局、选用哪种垃圾收集的算法、是否要对虚拟机字节码指令进行一些内部优化操作。</p>
+<a id="more"></a>
+<h2 id="Class文件格式"><a href="#Class文件格式" class="headerlink" title="Class文件格式"></a>Class文件格式</h2><p>编译后被Java虚拟机所执行的代码使用了一种平台中立的二进制格式来表示，并且经常以文本的形式存储，因为这种格式被称为Class文件格式。</p>
+<p>Class文件格式中精确地定义了类与接口的表示形式，包括<code>平台相关的目标文件格式</code>中一些细节上的惯例，如字节序。</p>
+<p><code>平台相关的目标文件格式</code>是指在特定平台编译出的Class文件无法在其他平台中使用。</p>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><p>Java虚拟机可以操作的数据类型可分为两类：<code>原始类型</code>和<code>引用类型</code>。与之对应，也存在<code>原始值(Primitive Values)</code>和<code>引用值(Reference Values)</code>两种类型的数值。</p>
+<p>Java虚拟机希望尽可能多的类型检查在程序运行之前完成，换句话说，编译器应当在编译期间尽最大努力完成可能的类型检查，使得虚拟机在运行期间无需进行这些操作。</p>
+<p>虚拟机的字节码指令本身可以确定它的指令操作数的类型是什么，可以利用这种特性可直接确定操作数的数值类型。例如：iadd，ladd，fadd和dadd这几条两个数值相加指令专属操作数类型分别为：int，long，float，double。</p>
+<p>虚拟机中使用reference类型来表示对某个对象的引用。</p>
+<p>reference是引用类型(Reference Types)的一种，int，long，double是原始类型（Primitive Types）的一种。</p>
+<p>reference,int,long,double是具体的数据类型，Reference Types，Primitive是某种数据类型的统称。</p>
+<h2 id="原始类型与值"><a href="#原始类型与值" class="headerlink" title="原始类型与值"></a>原始类型与值</h2><p>Java虚拟机支持的原始数据类型包括<code>数值类型(Numeric Types)</code>，<code>布尔类型(Boolean Types)</code>，<code>returnAddress类型</code>三类。</p>
+<p>数值类型又分为<code>整型类型(Integral Types)</code>和<code>浮点类型(Floating-Point Types)</code>两种。</p>
+<h3 id="整型类型与整型值"><a href="#整型类型与整型值" class="headerlink" title="整型类型与整型值"></a>整型类型与整型值</h3><ul>
+<li>byte，1个字节，默认值0，</li>
+<li>short，2个字节，默认值0</li>
+<li>int，4个字节，默认值0</li>
+<li>long，6个字节，默认值0</li>
+<li>char，2个字节，默认值null</li>
+</ul>
+<h3 id="浮点类型、取值集合及浮点值"><a href="#浮点类型、取值集合及浮点值" class="headerlink" title="浮点类型、取值集合及浮点值"></a>浮点类型、取值集合及浮点值</h3><ul>
+<li>float，32位单精度，默认值正数0</li>
+<li>double，64位双精度，默认值正数0</li>
+<li>除了NaN之外，浮点数集合中的元素都是有序的</li>
+<li>浮点数中，整数零和负数零是相等的</li>
+</ul>
+<h3 id="returnAddress类型和值"><a href="#returnAddress类型和值" class="headerlink" title="returnAddress类型和值"></a>returnAddress类型和值</h3><ul>
+<li>returnAddress类型会被Java虚拟机的jsr、ret和jst_w指令所使用。</li>
+<li>returnAddress类型的值指向一条虚拟机指令的操作码。</li>
+</ul>
+<h3 id="boolean类型"><a href="#boolean类型" class="headerlink" title="boolean类型"></a>boolean类型</h3><ul>
+<li>在Java语言之中涉及到boolean类型值的运算，在编译之后都使用Java虚拟机中的int数据类型来代替</li>
+<li>虚拟机的newarray指令可以创建boolean数组</li>
+</ul>
+<h2 id="引用类型与值"><a href="#引用类型与值" class="headerlink" title="引用类型与值"></a>引用类型与值</h2><ul>
+<li>Java虚拟机中有三种引用类型：类类型(Class Types)，数组类型(Array Tyeps)和接口类型(Interface Types)。这些引用类型的值分别由类实例、数组实例和实现了某个接口的类实例或数组实例动态创建。</li>
+<li>数组类型包括一个单一维度的组件类型(Component Type)，一个数组的组件类型也可以是数组。</li>
+<li>数组的元素类型(Element Type)必须是原始类型、类类型或者接口类型之中的一种。</li>
+<li>引用类型默认值就是null</li>
+<li>Java虚拟机规范并没有规定null在虚拟机实现中应当怎样编码表示</li>
+</ul>
+<h2 id="运行时数据区"><a href="#运行时数据区" class="headerlink" title="运行时数据区"></a>运行时数据区</h2><h3 id="PC寄存器"><a href="#PC寄存器" class="headerlink" title="PC寄存器"></a>PC寄存器</h3><ul>
+<li>每一条Java虚拟机线程都有自己的PC(Program Counter)寄存器</li>
+<li>在任意时刻，一条Java虚拟机线程只会执行一个方法的代码，这个方法称为<code>该线程的当前方法(Current Method)</code></li>
+<li>如果该方法不是native的，那PC寄存器就保存Java虚拟机正在执行的字节码指令的地址</li>
+<li>如果该方法是native的，那么PC寄存器的值是undefined</li>
+<li>PC寄存器的容量至少应当保存一个returnAddress类型的数据或者一个与平台相关的本地指针的值</li>
+</ul>
+<h3 id="Java虚拟机栈"><a href="#Java虚拟机栈" class="headerlink" title="Java虚拟机栈"></a>Java虚拟机栈</h3><ul>
+<li>每一条Java虚拟机线程都有自己私有的Java虚拟机栈(Java Virtual Machine Stack)，这个栈与线程同时创建，用于存储栈帧(Frames)。</li>
+<li>Java虚拟机栈的作用是用于存储局部变量和一些过程结果的地方</li>
+</ul>
+<h3 id="Java堆"><a href="#Java堆" class="headerlink" title="Java堆"></a>Java堆</h3><ul>
+<li>堆(Heap)是可供各条线程共享的运行时内存区域，也是供所有类实例和数组对象分配内存的区域</li>
+<li>Java堆在虚拟机启动的时候就被创建，他存储了被<code>自动管理系统</code>所管理的各种对象，这些受管理的对象无需，也无法显示地被销毁。</li>
+<li><code>自动管理系统</code>(Automatic Storage Management System)，也即常说的<code>垃圾收集器</code>(Garbage Collector)。</li>
+</ul>
+<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><ul>
+<li>方法区(Method Area)是可供各条线程共享的运行时内存区域。</li>
+<li>方法区存储了每一个类的结构信息，例如：运行时常量池、字段和方法数据、构造函数和普通方法的字节码内容、还包括一些在类、实例、接口初始化时用到的特殊方法。</li>
+<li>方法区在虚拟机启动的时候被创建</li>
+</ul>
+<h3 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h3><ul>
+<li>运行时常量池(Runtime Constant Pool)是每一个类或接口的常量池(Constant_Pool)的运行时表示形式，它包括了若干种不同的常量。</li>
+<li>每一个运行时常量池都分配在Java虚拟机的方法区之中，在类和接口被加载到虚拟机后，对应的运行时常量就被创建出来。</li>
+</ul>
+<h3 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h3><ul>
+<li>Java虚拟机实现可能会使用到传统的栈来支持native方法的执行，这个栈就是本地方法栈(Native Method Stack)。</li>
+<li>传统的栈又称C Stacks</li>
+<li>native方法指使用Java以外的其他语言编写的方法</li>
+</ul>
+<h2 id="栈帧"><a href="#栈帧" class="headerlink" title="栈帧"></a>栈帧</h2><ul>
+<li>栈帧(Frame)是用来存储数据和部分过程结果的数据结构，同时也被用来处理动态链接(Dynamic Linking)、方法返回值和异常分派(Dispatch Exception)。</li>
+<li>栈帧随着方法调用而创建，随着方法结束而销毁。</li>
+<li>栈帧容量的大小取决于Java虚拟机的实现和方法调用时可被分配的内存</li>
+<li>在一条线程之中，只有目前正在执行的那个方法的栈帧是活动的，这个栈帧被称为当前栈帧(Current Frame)，这个栈帧对应的方法被称为当前方法(Current Method)，定义这个方法的类被称作当前类。</li>
+<li>当一个新的方法被调用，一个新的栈帧也会随之而创建，并且随着程序控制权移交到新的方法而成为新的当前栈帧。</li>
+<li>栈帧是线程本地私有的数据，不可能在一个栈帧之中引用另外一条程序的栈帧</li>
+</ul>
+<h3 id="局部变量表"><a href="#局部变量表" class="headerlink" title="局部变量表"></a>局部变量表</h3><ul>
+<li>每个栈帧内部都包含一组称为局部变量表(Local Variables)的变量列表。</li>
+<li>boolean、byte、char、short、float、reference占一个局部变量</li>
+<li>long、double占两个连续的局部变量</li>
+<li>Java虚拟机使用局部变量表来完成方法调用时的参数传递</li>
+<li>当实例方法别调用的时候，第0个局部变量一定是用来存储被调用实例方法所在的对象的引用(即this)</li>
+</ul>
+<h3 id="操作数栈"><a href="#操作数栈" class="headerlink" title="操作数栈"></a>操作数栈</h3><ul>
+<li>每一个栈帧内部都包含一个操作数栈</li>
+<li>Java虚拟机提供一些字节码指令来从局部变量表或者对象实例的字段中复制常量或变量值到操作数栈中，也提供一些指令用于从操作数栈取走数据、操作数据和把操作结果重新入栈。</li>
+</ul>
+<h3 id="动态链接"><a href="#动态链接" class="headerlink" title="动态链接"></a>动态链接</h3><ul>
+<li>每一个栈帧内部都包含一个<code>指向运行时常量池的引用</code>来支持当前方法代码实现动态链接(Dynamic Linking)</li>
+<li>在Class文件里面，描述一个方法调用了其他方法，或者访问其成员变量是通过符号引用(Symbolic Reference)来表示的。</li>
+<li>动态链接的作用就是将这些符号引用所表示的方法转换为实际方法的直接引用。</li>
+</ul>
+<h3 id="方法正常调用完成"><a href="#方法正常调用完成" class="headerlink" title="方法正常调用完成"></a>方法正常调用完成</h3><ul>
+<li><p>方法正常调用完成是指在方法的执行过程中，没有任何异常被跑出。</p>
+</li>
+<li><p>如果当前方法调用正常完成的话，它很可能会返回一个值给调用它的方法。</p>
+</li>
+</ul>
+<h3 id="方法异常调用完成"><a href="#方法异常调用完成" class="headerlink" title="方法异常调用完成"></a>方法异常调用完成</h3><ul>
+<li>方法异常调用是指在方法的执行过程中，某些指令导致了Java虚拟机抛出异常</li>
+<li>如果方法异常调用完成，那一定不会有方法返回值返回给它的调用者</li>
+</ul>
+<h2 id="对象的表示"><a href="#对象的表示" class="headerlink" title="对象的表示"></a>对象的表示</h2><ul>
+<li>Java虚拟机规范不强制规定对象的内部结构应当如何表示</li>
+</ul>
+<h2 id="浮点算法"><a href="#浮点算法" class="headerlink" title="浮点算法"></a>浮点算法</h2><h3 id="Java虚拟机和IEEE-754的浮点算法"><a href="#Java虚拟机和IEEE-754的浮点算法" class="headerlink" title="Java虚拟机和IEEE 754的浮点算法"></a>Java虚拟机和IEEE 754的浮点算法</h3><ul>
+<li>在Java虚拟机中的浮点数在遇到非法操作，如被零除、上限溢出、下限溢出和非精确时，不会抛出exception</li>
+</ul>
+<h3 id="浮点模式"><a href="#浮点模式" class="headerlink" title="浮点模式"></a>浮点模式</h3><ul>
+<li>每一个方法都有一项属性称为浮点模式(Floating-Point Mode)，取值有两种，要么是FP-strict模式要么是非FP-strict模式。</li>
+<li>方法的浮点模式决定于Class文件中代表该方法的method_info结构的访问标志(access_flags)中的ACC_STRICT标志位的取值。</li>
+</ul>
+<h3 id="数值集合转换"><a href="#数值集合转换" class="headerlink" title="数值集合转换"></a>数值集合转换</h3><ul>
+<li>在一些特定场景下，支持扩展指数集合的Java虚拟机实现数值在标准浮点数集合与扩展指数集合之间的应收关系是运行和必要的，这种映射操作就称为数值集合转换。</li>
+<li>数值集合转换并非数据类型转换，而是在同一种数据类型之中不同数值集合的映射操作。</li>
+</ul>
+<h2 id="初始化方法的特殊命名"><a href="#初始化方法的特殊命名" class="headerlink" title="初始化方法的特殊命名"></a>初始化方法的特殊命名</h2><ul>
+<li>在Java虚拟机层面上，Java语言中的构造函数是以一个名为<init>的特殊实例初始化方法的形式出现的，<init>这个方法名称是由编译器命名的，因为它是一个非法的Java方法命名。</init></init></li>
+<li>一个类或者接口最多可以包含不超过一个类或接口的初始化方法，类或者接口就是通过这个方法完成初始化的。这个方法是一个不包含参数的静态方法，名为<clinit>。这个名字也是有编译器命名的。</clinit></li>
+</ul>
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><ul>
+<li>Java虚拟机里面的异常使用Throwable或其子类的实例来表示，抛异常的本质实际上是程序控制权的一种即时的、非局部(Nonlocal)的转换—从异常抛出的地方转换至处理异常的地方。</li>
+<li>在Class文件中定义了明确的异常处理器查找顺序，才能保证无论Class文件是通过何种途径产生的，Java虚拟机执行时都有一致的行为表现。</li>
+</ul>
+<h2 id="字节码指令集简介"><a href="#字节码指令集简介" class="headerlink" title="字节码指令集简介"></a>字节码指令集简介</h2><ul>
+<li><code>Java虚拟机的指令</code>由一个字节长度的、代表着某种特定操作含义的<code>操作码(Opcode)</code>以及跟随其后的零至多个代表此操作所需参数的<code>操作数(Operands)</code>所构成。</li>
+<li>如果一个操作数的长度超过一个字节，那它将会以Big-Endian顺序存储–即高位在前的字节序。</li>
+</ul>
+<h3 id="数据类型与Java虚拟机"><a href="#数据类型与Java虚拟机" class="headerlink" title="数据类型与Java虚拟机"></a>数据类型与Java虚拟机</h3><ul>
+<li>在Java虚拟机的指令集中，大多数的指令都包含了其操作所对应的数据类型信息。</li>
+<li>大部分与数据类型相关的字节码指令，他们的操作助记符中都有特殊的字符来表面专门为哪种数据类型服务：i代码对int类型的操作，l代表long，s代表short，b代表byte，c代表char，f代表float，d代表double，a代表reference。</li>
+<li>一些指令的助记符中没有明确的指明操作类型的字母，如：arraylength指令，它没有代表数据类型的特殊字符，但操作数永远只能是一个数组类型的对象。无条件跳转指令goto则是与数据类型无关的。</li>
+<li>大部分的执行都没有支持整数类型byte、char、short、boolean。实际上都是使用相应的int类型作运算类型(Compulational Type)</li>
+<li>编译器会在编译期或运行期会将byte和short类型的数据<code>带符号扩展(Sign-Extend)</code>为相应的int类型</li>
+<li>编译器会将boolean和char类型数据<code>零位扩展(Zero-Extend)</code>为相应的int类型数据</li>
+<li>在处理boolean、byte、short和char类型的数组时，也会转换为使用对应的int类型的字符码指令来处理</li>
+</ul>
+<h3 id="加载和存储指令"><a href="#加载和存储指令" class="headerlink" title="加载和存储指令"></a>加载和存储指令</h3><ul>
+<li>加载和存储指令用于将数据从栈帧的局部变量表和操作数栈之间来回传输</li>
+<li>将一个局部变量加载到操纵栈的指令包括：iload、iload_<n>、lload…</n></li>
+<li>将一个数值从操作数栈存储到局部变量表的指令包括：istore、istore_<n>、lstore…</n></li>
+<li>将一个常量加载到操作数栈的指令包括有：bipush、sipush、ldc…</li>
+<li>扩充局部变量表的访问索引的指令：wide</li>
+<li>iload_<n>，它代表了iload_0，iload_1，iload_2，iload_3这几条指令，他们表面上没有操作数，但操作数都是在指令隐含了</n></li>
+</ul>
+<h3 id="运算指令"><a href="#运算指令" class="headerlink" title="运算指令"></a>运算指令</h3><ul>
+<li>算术指令用于对两个操作数栈上的值进行某种特定运算，并把结果重新存入到操作栈顶。</li>
+<li>运算指令分为两种：对整型数据进行运算的指令与对浮点型数据进行运算的指令，它们都是使用Java虚拟机的数字类型。</li>
+<li>所有算术指令如下表格</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">指令名称</th>
+<th style="text-align:left">指令代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">加法指令</td>
+<td style="text-align:left">iadd，ladd，fadd，dadd</td>
+</tr>
+<tr>
+<td style="text-align:left">减法指令</td>
+<td style="text-align:left">isub，lsub，fsub，dsub</td>
+</tr>
+<tr>
+<td style="text-align:left">乘法指令</td>
+<td style="text-align:left">imul，lmul，fmul，dmul</td>
+</tr>
+<tr>
+<td style="text-align:left">除法指令</td>
+<td style="text-align:left">idiv，ldiv，fdiv，ddiv</td>
+</tr>
+<tr>
+<td style="text-align:left">求余指令</td>
+<td style="text-align:left">irem，lrem，frem，drem</td>
+</tr>
+<tr>
+<td style="text-align:left">取反指令</td>
+<td style="text-align:left">ineg，lneg，fneg，dneg</td>
+</tr>
+<tr>
+<td style="text-align:left">位移指令</td>
+<td style="text-align:left">ishl，ishr，iushr，lshl，lshr，lushr</td>
+</tr>
+<tr>
+<td style="text-align:left">按位或指令</td>
+<td style="text-align:left">ior，lor</td>
+</tr>
+<tr>
+<td style="text-align:left">按位与指令</td>
+<td style="text-align:left">iand，land</td>
+</tr>
+<tr>
+<td style="text-align:left">按位异或指令</td>
+<td style="text-align:left">ixor，lxor</td>
+</tr>
+<tr>
+<td style="text-align:left">局部变量自增指令</td>
+<td style="text-align:left">iinc</td>
+</tr>
+<tr>
+<td style="text-align:left">比较指令</td>
+<td style="text-align:left">dcmpg，dcmpl，fcmpg，fcmpl，lcmp</td>
+</tr>
+</tbody>
+</table>
+<h3 id="类型转换指令"><a href="#类型转换指令" class="headerlink" title="类型转换指令"></a>类型转换指令</h3><ul>
+<li>类型转换指令可以将两种Java虚拟机数值类型进行相互转换，这些转换操作一般用于实现用户代码的显式类型转换操作，或者用来处理Java虚拟机字节码指令集中指令非完全独立的问题</li>
+<li>Java虚拟机<code>直接支持</code>以下数值的<code>宽化类型转换</code>(Widening Numeric Conversions)</li>
+<li><p>直接支持即转换时无需显示的转换指令；宽化类型转换即小范围类型向大范围类型的安全转换</p>
+<ol>
+<li>int类型到long、float、double</li>
+<li>long类型到float、double</li>
+<li>float类型到double</li>
+</ol>
+</li>
+<li><p>窄化类型转换指令包括：i2b、i2c、i2s、l2i、f2i、f2l、d2i、d2f</p>
+</li>
+<li>窄话类型转换可能会导致转换结果产生不同发正负号、不同的数量级，转换过程很可能会导致数值数据丢失精度</li>
+<li>尽管可能发生上限溢出、下限溢出和精度丢失等情况，但是Java虚拟机中数值类型的窄化转换永远不可能导致虚拟机抛出运行时<code>异常</code>。该异常指《Java虚拟机规范》中定义的异常。</li>
+</ul>
+<h3 id="对象创建与操作"><a href="#对象创建与操作" class="headerlink" title="对象创建与操作"></a>对象创建与操作</h3><ul>
+<li>创建类实例的指令：new</li>
+<li>创建数组的指令：newarray，anewarray，multianewarray</li>
+<li>访问类字段(static，类变量)和实例字段(非static，实例类型)的指令：getfield，putfield，getstatic，putstatic</li>
+<li>把一个数组元素加载到操作数栈的指令：baload，caload，saload，iaload，laload，faload，daload，aaload</li>
+<li>将一个操作数栈的值储存到数组元素中的指令：bastore，castore，sastore，iastore，fastore，dastore，aastore</li>
+<li>取数组长度的指令：arraylength</li>
+<li>检查类实例类型的指令：instanceof，checkcast</li>
+</ul>
+<h3 id="操作数栈管理指令"><a href="#操作数栈管理指令" class="headerlink" title="操作数栈管理指令"></a>操作数栈管理指令</h3><ul>
+<li>Java虚拟机提供了一些用于直接操作操作数栈的指令，包括：pop，pop2，dup，dup2，dup_xl，dup2_xl，dup_x2，dup2_x2，swap</li>
+</ul>
+<h3 id="控制转移指令"><a href="#控制转移指令" class="headerlink" title="控制转移指令"></a>控制转移指令</h3><ul>
+<li>控制转换指令可以让Java虚拟机有条件或无条件地从指定指令<code>而不是控制转移指令的下一条指令</code>继续执行程序。</li>
+<li>控制转移指令包括：条件分支，复合条件分支，无条件分支<ul>
+<li>条件分支：ireq、iflt、ifle、ifne…</li>
+<li>复合条件分支：tableswitch、lookupswitch</li>
+<li>无条件分支：goto、goto_w、jsr、jsr_w、ret</li>
+</ul>
+</li>
+<li>boolean、byte、char、short类型的条件分支比较操作，都使用int类型的比较指令来完成</li>
+<li>long、float、double类型的条件分支比较操作，则会先执行相应类型的比较运算指令，运算指令会返回一个整型值到操作数栈中，随后在执行int类型的条件分支比较操作来完成整个分支跳转</li>
+<li>Java虚拟机提供了丰富的int类型的条件分支指令</li>
+</ul>
+<h3 id="方法调用和返回指令"><a href="#方法调用和返回指令" class="headerlink" title="方法调用和返回指令"></a>方法调用和返回指令</h3><ul>
+<li>invokevirtual指令用于调用对象的实例方法</li>
+<li>invokeinterface指令用于调用接口方法</li>
+<li>invokespecial指令用于调用一些需要特殊处理的实例方法，包括实例初始化方法、私有方法和父类方法</li>
+<li>invokestatic指令用于调用类方法(static方法)</li>
+<li>方法的返回指令是根据返回值的类型区分的，包括ireturn(返回值是boolean、byte、char、short、int)、lreturn、freturn、dreturn、areturn。return指令供声明为void方法、实例初始化方法、类和接口的类初始化方法使用</li>
+</ul>
+<h3 id="抛出异常"><a href="#抛出异常" class="headerlink" title="抛出异常"></a>抛出异常</h3><ul>
+<li>在程序中显示抛出异常的操作会由athrow指令实现</li>
+</ul>
+<h3 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h3><ul>
+<li>Java虚拟机可以支持方法级别的同步和方法内部一段指令序列的同步，这两种同步结构都是使用<code>管程(Monitor)</code>来支持的</li>
+<li>虚拟机可以从方法常量池中的方法<code>表结构(method_info Structure)</code>中的<code>ACC_SYNCHRONIZED</code>访问标志区分一个方法是否同步方法</li>
+<li>同步一段指令集序列通常是有Java语言中的synchronized块来表示的，Java虚拟机的指令集有monitorenter和monitorexit两条指令来支持synchronized关键字的语义，正确实现synchronized关键字需要编译器与Java虚拟机两者协作支持</li>
+<li><code>结构话锁定(Structured Locking)</code>是指在方法调用期间每一个管程退出都与前面的管程进入相匹配的情形。</li>
+</ul>
+<h2 id="类库"><a href="#类库" class="headerlink" title="类库"></a>类库</h2><ul>
+<li>Java虚拟机必须对不同平台下Java类库的实现提供充分的支持，因为其中有一些类库如果没有Java虚拟机的支持的话是根本无法实现的</li>
+</ul>
+<h2 id="公有设计，私有实现"><a href="#公有设计，私有实现" class="headerlink" title="公有设计，私有实现"></a>公有设计，私有实现</h2><ul>
+<li>Java虚拟机共同外观：Class文件格式以及字节码指令集等。这些内容与硬件、操作系统和Java虚拟机的独立实现都是密切相关的，虚拟机实现者可能更愿意把它们看作是程序在各种Java平台实现之间互相安全地交互的手段，而多于一张需要精确跟随的计划蓝图。</li>
+<li>Java虚拟机实现的方式主要有两种<ul>
+<li>将输入的Java虚拟机代码在加载时或执行时反应成另一中虚拟机的指令集</li>
+<li>将输入的Java虚拟机代码在加载时或执行时翻译成宿主主机CPU的本地指令集(JIT)</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jvm/" rel="tag"># jvm</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/08/deal-tomcat-out-of-memory-error/" rel="next" title="tomcat内存溢出">
+                <i class="fa fa-chevron-left"></i> tomcat内存溢出
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/08/record-everyday/" rel="prev" title="记录生活每一天">
+                记录生活每一天 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Class文件格式"><span class="nav-number">2.</span> <span class="nav-text">Class文件格式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据类型"><span class="nav-number">3.</span> <span class="nav-text">数据类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原始类型与值"><span class="nav-number">4.</span> <span class="nav-text">原始类型与值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#整型类型与整型值"><span class="nav-number">4.1.</span> <span class="nav-text">整型类型与整型值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮点类型、取值集合及浮点值"><span class="nav-number">4.2.</span> <span class="nav-text">浮点类型、取值集合及浮点值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#returnAddress类型和值"><span class="nav-number">4.3.</span> <span class="nav-text">returnAddress类型和值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#boolean类型"><span class="nav-number">4.4.</span> <span class="nav-text">boolean类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引用类型与值"><span class="nav-number">5.</span> <span class="nav-text">引用类型与值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行时数据区"><span class="nav-number">6.</span> <span class="nav-text">运行时数据区</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PC寄存器"><span class="nav-number">6.1.</span> <span class="nav-text">PC寄存器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机栈"><span class="nav-number">6.2.</span> <span class="nav-text">Java虚拟机栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Java堆"><span class="nav-number">6.3.</span> <span class="nav-text">Java堆</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法区"><span class="nav-number">6.4.</span> <span class="nav-text">方法区</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行时常量池"><span class="nav-number">6.5.</span> <span class="nav-text">运行时常量池</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地方法栈"><span class="nav-number">6.6.</span> <span class="nav-text">本地方法栈</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#栈帧"><span class="nav-number">7.</span> <span class="nav-text">栈帧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#局部变量表"><span class="nav-number">7.1.</span> <span class="nav-text">局部变量表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作数栈"><span class="nav-number">7.2.</span> <span class="nav-text">操作数栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态链接"><span class="nav-number">7.3.</span> <span class="nav-text">动态链接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法正常调用完成"><span class="nav-number">7.4.</span> <span class="nav-text">方法正常调用完成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法异常调用完成"><span class="nav-number">7.5.</span> <span class="nav-text">方法异常调用完成</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对象的表示"><span class="nav-number">8.</span> <span class="nav-text">对象的表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#浮点算法"><span class="nav-number">9.</span> <span class="nav-text">浮点算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java虚拟机和IEEE-754的浮点算法"><span class="nav-number">9.1.</span> <span class="nav-text">Java虚拟机和IEEE 754的浮点算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浮点模式"><span class="nav-number">9.2.</span> <span class="nav-text">浮点模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#数值集合转换"><span class="nav-number">9.3.</span> <span class="nav-text">数值集合转换</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#初始化方法的特殊命名"><span class="nav-number">10.</span> <span class="nav-text">初始化方法的特殊命名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常"><span class="nav-number">11.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字节码指令集简介"><span class="nav-number">12.</span> <span class="nav-text">字节码指令集简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据类型与Java虚拟机"><span class="nav-number">12.1.</span> <span class="nav-text">数据类型与Java虚拟机</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加载和存储指令"><span class="nav-number">12.2.</span> <span class="nav-text">加载和存储指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运算指令"><span class="nav-number">12.3.</span> <span class="nav-text">运算指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#类型转换指令"><span class="nav-number">12.4.</span> <span class="nav-text">类型转换指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象创建与操作"><span class="nav-number">12.5.</span> <span class="nav-text">对象创建与操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作数栈管理指令"><span class="nav-number">12.6.</span> <span class="nav-text">操作数栈管理指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#控制转移指令"><span class="nav-number">12.7.</span> <span class="nav-text">控制转移指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法调用和返回指令"><span class="nav-number">12.8.</span> <span class="nav-text">方法调用和返回指令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#抛出异常"><span class="nav-number">12.9.</span> <span class="nav-text">抛出异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#同步"><span class="nav-number">12.10.</span> <span class="nav-text">同步</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类库"><span class="nav-number">13.</span> <span class="nav-text">类库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#公有设计，私有实现"><span class="nav-number">14.</span> <span class="nav-text">公有设计，私有实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

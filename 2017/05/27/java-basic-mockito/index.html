@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础-mockito">
+<meta property="og:url" content="http://kimisme.com/2017/05/27/java-basic-mockito/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-05-29T08:28:18.527Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础-mockito">
+<meta name="twitter:description" content="前言">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/05/27/java-basic-mockito/"/>
+
+
+
+
+
+  <title>Java基础-mockito | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/05/27/java-basic-mockito/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java基础-mockito</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-27T13:41:06+08:00">
+                2017-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Java-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><a id="more"></a>
+<h2 id="Gradle配置"><a href="#Gradle配置" class="headerlink" title="Gradle配置"></a>Gradle配置</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">compile group: <span class="string">'org.mockito'</span>, name: <span class="string">'mockito-all'</span>, version: <span class="string">'1.10.19'</span></div><div class="line">compile group: <span class="string">'junit'</span>, name: <span class="string">'junit'</span>, version: <span class="string">'4.12'</span></div></pre></td></tr></table></figure>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>首先引入静态资源</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.mockito.Mockito.*;</div><div class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.Assert.*;</div></pre></td></tr></table></figure>
+<h3 id="验证行为"><a href="#验证行为" class="headerlink" title="验证行为"></a>验证行为</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">verify_behaviour</span><span class="params">()</span></span>&#123;        </div><div class="line">    <span class="comment">//模拟创建一个List对象                     </span></div><div class="line">    List mock = mock(List.class);      </div><div class="line">    <span class="comment">//使用mock的对象                        </span></div><div class="line">    mock.add(<span class="number">1</span>);                       </div><div class="line">    mock.clear();    <span class="comment">//清空mock对象        </span></div><div class="line">    <span class="comment">//验证add(1)和clear()行为是否发生           </span></div><div class="line">    verify(mock).add(<span class="number">1</span>);               </div><div class="line">    verify(mock).clear();              </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="模拟我们所期望的结果"><a href="#模拟我们所期望的结果" class="headerlink" title="模拟我们所期望的结果"></a>模拟我们所期望的结果</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">when_thenReturn</span><span class="params">()</span></span>&#123;                                                      </div><div class="line">    <span class="comment">//mock一个Iterator类                                                               </span></div><div class="line">    Iterator iterator = mock(Iterator.class);                                       </div><div class="line">    <span class="comment">//预设当iterator调用next()时第一次返回hello，第n次都返回world                                    </span></div><div class="line">    when(iterator.next()).thenReturn(<span class="string">"hello"</span>).thenReturn(<span class="string">"world"</span>);                  </div><div class="line">    <span class="comment">//使用mock的对象                                                                     </span></div><div class="line">    String result = iterator.next() + <span class="string">" "</span> + iterator.next() + <span class="string">" "</span> + iterator.next();</div><div class="line">    <span class="comment">//验证结果                                                                          </span></div><div class="line">    assertEquals(<span class="string">"hello world world"</span>,result);                                       </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="模拟我们期待的异常"><a href="#模拟我们期待的异常" class="headerlink" title="模拟我们期待的异常"></a>模拟我们期待的异常</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>(expected = IOException.class)                                  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">when_thenThrow</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;                    </div><div class="line">    OutputStream outputStream = mock(OutputStream.class);            </div><div class="line">    OutputStreamWriter writer = <span class="keyword">new</span> OutputStreamWriter(outputStream);</div><div class="line">    <span class="comment">//预设当流关闭时抛出异常                                                    </span></div><div class="line">    doThrow(<span class="keyword">new</span> IOException()).when(outputStream).close();           </div><div class="line">    outputStream.close();                                            </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="参数匹配"><a href="#参数匹配" class="headerlink" title="参数匹配"></a>参数匹配</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>                                                  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">with_arguments</span><span class="params">()</span></span>&#123;                          </div><div class="line">    Comparable comparable = mock(Comparable.class);    </div><div class="line">    <span class="comment">//预设根据不同的参数返回不同的结果                                 </span></div><div class="line">    when(comparable.compareTo(<span class="string">"Test"</span>)).thenReturn(<span class="number">1</span>);  </div><div class="line">    when(comparable.compareTo(<span class="string">"Omg"</span>)).thenReturn(<span class="number">2</span>);   </div><div class="line">    assertEquals(<span class="number">1</span>, comparable.compareTo(<span class="string">"Test"</span>));     </div><div class="line">    assertEquals(<span class="number">2</span>, comparable.compareTo(<span class="string">"Omg"</span>));      </div><div class="line">    <span class="comment">//对于没有预设的情况会返回默认值                                  </span></div><div class="line">    assertEquals(<span class="number">0</span>, comparable.compareTo(<span class="string">"Not stub"</span>)); </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="匹配自己想要的任意参数"><a href="#匹配自己想要的任意参数" class="headerlink" title="匹配自己想要的任意参数"></a>匹配自己想要的任意参数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">with_unspecified_arguments</span><span class="params">()</span></span>&#123;                        </div><div class="line">    List list = mock(List.class);                                </div><div class="line">    <span class="comment">//匹配任意参数                                                     </span></div><div class="line">    when(list.get(anyInt())).thenReturn(<span class="number">1</span>);                      </div><div class="line">    when(list.contains(argThat(<span class="keyword">new</span> IsValid()))).thenReturn(<span class="keyword">true</span>);</div><div class="line">    assertEquals(<span class="number">1</span>, list.get(<span class="number">1</span>));                                </div><div class="line">    assertEquals(<span class="number">1</span>, list.get(<span class="number">999</span>));                              </div><div class="line">    assertTrue(list.contains(<span class="string">"1"</span>));                              </div><div class="line">    assertTrue(!list.contains(<span class="string">"3"</span>));                             </div><div class="line">&#125;                                                                </div><div class="line">                                                                 </div><div class="line"><span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">IsValid</span> <span class="keyword">extends</span> <span class="title">ArgumentMatcher</span>&lt;<span class="title">List</span>&gt;</span>&#123;             </div><div class="line">    <span class="meta">@Override</span>                                                    </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(Object o)</span> </span>&#123;                           </div><div class="line">        <span class="keyword">return</span> o.equals(<span class="string">"1"</span>) || o.equals(<span class="string">"2"</span>);                   </div><div class="line">    &#125;                                                            </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>需要注意的是如果你使用了参数匹配，那么所有的参数都必须通过matchers来匹配</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">all_arguments_provided_by_matchers</span><span class="params">()</span></span>&#123;               </div><div class="line">    Comparator comparator = mock(Comparator.class);             </div><div class="line">    comparator.compare(<span class="string">"nihao"</span>,<span class="string">"hello"</span>);                        </div><div class="line">    <span class="comment">//如果你使用了参数匹配，那么所有的参数都必须通过matchers来匹配                        </span></div><div class="line">    verify(comparator).compare(anyString(),eq(<span class="string">"hello"</span>));        </div><div class="line">    <span class="comment">//下面的为无效的参数匹配使用                                             </span></div><div class="line">    <span class="comment">//verify(comparator).compare(anyString(),"hello");          </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="验证确切的调用次数"><a href="#验证确切的调用次数" class="headerlink" title="验证确切的调用次数"></a>验证确切的调用次数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">verifying_number_of_invocations</span><span class="params">()</span> </span>&#123;     </div><div class="line">	List list = mock(List.class);                   </div><div class="line">	list.add(<span class="number">1</span>);                                    </div><div class="line">	list.add(<span class="number">2</span>);                                    </div><div class="line">	list.add(<span class="number">2</span>);                                    </div><div class="line">	list.add(<span class="number">3</span>);                                    </div><div class="line">	list.add(<span class="number">3</span>);                                    </div><div class="line">	list.add(<span class="number">3</span>);                                    </div><div class="line">	<span class="comment">// 验证是否被调用一次，等效于下面的times(1)                     </span></div><div class="line">	verify(list).add(<span class="number">1</span>);                            </div><div class="line">	verify(list, times(<span class="number">1</span>)).add(<span class="number">1</span>);                  </div><div class="line">	<span class="comment">// 验证是否被调用2次                                    </span></div><div class="line">	verify(list, times(<span class="number">2</span>)).add(<span class="number">2</span>);                  </div><div class="line">	<span class="comment">// 验证是否被调用3次                                    </span></div><div class="line">	verify(list, times(<span class="number">3</span>)).add(<span class="number">3</span>);                  </div><div class="line">	<span class="comment">// 验证是否从未被调用过                                   </span></div><div class="line">	verify(list, never()).add(<span class="number">4</span>);                   </div><div class="line">	<span class="comment">// 验证至少调用一次                                     </span></div><div class="line">	verify(list, atLeastOnce()).add(<span class="number">1</span>);             </div><div class="line">	<span class="comment">// 验证至少调用2次                                     </span></div><div class="line">	verify(list, atLeast(<span class="number">2</span>)).add(<span class="number">2</span>);                </div><div class="line">	<span class="comment">// 验证至多调用3次                                     </span></div><div class="line">	verify(list, atMost(<span class="number">3</span>)).add(<span class="number">3</span>);                 </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="模拟方法抛出异常"><a href="#模拟方法抛出异常" class="headerlink" title="模拟方法抛出异常"></a>模拟方法抛出异常</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>(expected = RuntimeException.class)                 </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doThrow_when</span><span class="params">()</span></span>&#123;                              </div><div class="line">    List list = mock(List.class);                        </div><div class="line">    doThrow(<span class="keyword">new</span> RuntimeException()).when(list).add(<span class="number">1</span>);   </div><div class="line">    list.add(<span class="number">1</span>);                                         </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="模拟执行顺序"><a href="#模拟执行顺序" class="headerlink" title="模拟执行顺序"></a>模拟执行顺序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>                                        </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">verification_in_order</span><span class="params">()</span></span>&#123;         </div><div class="line">    List list = mock(List.class);            </div><div class="line">    List list2 = mock(List.class);           </div><div class="line">    list.add(<span class="number">1</span>);                             </div><div class="line">    list2.add(<span class="string">"hello"</span>);                      </div><div class="line">    list.add(<span class="number">2</span>);                             </div><div class="line">    list2.add(<span class="string">"world"</span>);                      </div><div class="line">    <span class="comment">//将需要排序的mock对象放入InOrder                  </span></div><div class="line">    InOrder inOrder = inOrder(list,list2);   </div><div class="line">    <span class="comment">//下面的代码不能颠倒顺序，验证执行顺序                     </span></div><div class="line">    inOrder.verify(list).add(<span class="number">1</span>);             </div><div class="line">    inOrder.verify(list2).add(<span class="string">"hello"</span>);      </div><div class="line">    inOrder.verify(list).add(<span class="number">2</span>);             </div><div class="line">    inOrder.verify(list2).add(<span class="string">"world"</span>);      </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="确保模拟对象上无互动发生"><a href="#确保模拟对象上无互动发生" class="headerlink" title="确保模拟对象上无互动发生"></a>确保模拟对象上无互动发生</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>                                         </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">verify_interaction</span><span class="params">()</span></span>&#123;             </div><div class="line">    List list = mock(List.class);             </div><div class="line">    List list2 = mock(List.class);            </div><div class="line">    List list3 = mock(List.class);            </div><div class="line">    list.add(<span class="number">1</span>);                              </div><div class="line">    verify(list).add(<span class="number">1</span>);                      </div><div class="line">    verify(list,never()).add(<span class="number">2</span>);              </div><div class="line">    <span class="comment">//验证零互动行为                                 </span></div><div class="line">    verifyZeroInteractions(list2,list3);      </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="找出冗余的互动-即未被验证到的"><a href="#找出冗余的互动-即未被验证到的" class="headerlink" title="找出冗余的互动(即未被验证到的)"></a>找出冗余的互动(即未被验证到的)</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>(expected = NoInteractionsWanted.class)                                                          </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">find_redundant_interaction</span><span class="params">()</span></span>&#123;                                                             </div><div class="line">    List list = mock(List.class);                                                                     </div><div class="line">    list.add(<span class="number">1</span>);                                                                                      </div><div class="line">    list.add(<span class="number">2</span>);                                                                                      </div><div class="line">    verify(list,times(<span class="number">2</span>)).add(anyInt());                                                              </div><div class="line">    <span class="comment">//检查是否有未被验证的互动行为，因为add(1)和add(2)都会被上面的anyInt()验证到，所以下面的代码会通过                                      </span></div><div class="line">    verifyNoMoreInteractions(list);                                                                   </div><div class="line">                                                                                                      </div><div class="line">    List list2 = mock(List.class);                                                                    </div><div class="line">    list2.add(<span class="number">1</span>);                                                                                     </div><div class="line">    list2.add(<span class="number">2</span>);                                                                                     </div><div class="line">    verify(list2).add(<span class="number">1</span>);                                                                             </div><div class="line">    <span class="comment">//检查是否有未被验证的互动行为，因为add(2)没有被验证，所以下面的代码会失败抛出异常                                                     </span></div><div class="line">    verifyNoMoreInteractions(list2);                                                                  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="使用注解的方式来快速模拟"><a href="#使用注解的方式来快速模拟" class="headerlink" title="使用注解的方式来快速模拟"></a>使用注解的方式来快速模拟</h3><p>在上面的测试中我们在每个测试方法里都mock了一个List对象，为了避免重复的mock，是测试类更具有可读性，我们可以使用下面的（@Mock）注解方式来快速模拟对象：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Mock</span>                                        </div><div class="line"><span class="keyword">private</span> List mockList;                       </div><div class="line">                                             </div><div class="line"><span class="comment">//初始化mock                                    </span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">Program</span><span class="params">()</span> </span>&#123;                           </div><div class="line">	MockitoAnnotations.initMocks(<span class="keyword">this</span>);      </div><div class="line">&#125;                                            </div><div class="line">                                             </div><div class="line"><span class="meta">@Test</span>                                        </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shorthand</span><span class="params">()</span></span>&#123;                     </div><div class="line">    mockList.add(<span class="number">1</span>);                         </div><div class="line">    verify(mockList).add(<span class="number">1</span>);                 </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>或者使用built-in runner：MockitoJUnitRunner</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@RunWith</span>(MockitoJUnitRunner.class)       </div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MockitoExample2</span> </span>&#123;           </div><div class="line">	<span class="meta">@Mock</span>                                </div><div class="line">	<span class="keyword">private</span> List mockList;               </div><div class="line">	                                     </div><div class="line">	<span class="meta">@Test</span>                                </div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">shorthand</span><span class="params">()</span></span>&#123;             </div><div class="line">		mockList.add(<span class="number">1</span>);                 </div><div class="line">		verify(mockList).add(<span class="number">1</span>);         </div><div class="line">	&#125;                                    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>更多的注解还有@Captor,@Spy,@InjectMocks</p>
+<h3 id="连续调用"><a href="#连续调用" class="headerlink" title="连续调用"></a>连续调用</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>(expected = RuntimeException.class)                                                </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">consecutive_calls</span><span class="params">()</span></span>&#123;                                                        </div><div class="line">    <span class="comment">//模拟连续调用返回期望值，如果分开，则只有最后一个有效                                                        </span></div><div class="line">    when(mockList.get(<span class="number">0</span>)).thenReturn(<span class="number">0</span>);                                                </div><div class="line">    when(mockList.get(<span class="number">0</span>)).thenReturn(<span class="number">1</span>);                                                </div><div class="line">    when(mockList.get(<span class="number">0</span>)).thenReturn(<span class="number">2</span>);                                                </div><div class="line">    when(mockList.get(<span class="number">1</span>)).thenReturn(<span class="number">0</span>).thenReturn(<span class="number">1</span>).thenThrow(<span class="keyword">new</span> RuntimeException());</div><div class="line">    assertEquals(<span class="number">2</span>,mockList.get(<span class="number">0</span>));                                                    </div><div class="line">    assertEquals(<span class="number">2</span>,mockList.get(<span class="number">0</span>));                                                    </div><div class="line">    assertEquals(<span class="number">0</span>,mockList.get(<span class="number">1</span>));                                                    </div><div class="line">    assertEquals(<span class="number">1</span>,mockList.get(<span class="number">1</span>));                                                    </div><div class="line">    <span class="comment">//第三次或更多调用都会抛出异常                                                                    </span></div><div class="line">    mockList.get(<span class="number">1</span>);                                                                    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="使用回调生成期望值"><a href="#使用回调生成期望值" class="headerlink" title="使用回调生成期望值"></a>使用回调生成期望值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>                                                                       </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">answer_with_callback</span><span class="params">()</span></span>&#123;                                         </div><div class="line">    <span class="comment">//使用Answer来生成我们我们期望的返回                                                  </span></div><div class="line">    when(mockList.get(anyInt())).thenAnswer(<span class="keyword">new</span> Answer&lt;Object&gt;() &#123;          </div><div class="line">        <span class="meta">@Override</span>                                                           </div><div class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">answer</span><span class="params">(InvocationOnMock invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;</div><div class="line">            Object[] args = invocation.getArguments();                      </div><div class="line">            <span class="keyword">return</span> <span class="string">"hello world:"</span>+args[<span class="number">0</span>];                                  </div><div class="line">        &#125;                                                                   </div><div class="line">    &#125;);                                                                     </div><div class="line">    assertEquals(<span class="string">"hello world:0"</span>,mockList.get(<span class="number">0</span>));                          </div><div class="line">    assertEquals(<span class="string">"hello world:999"</span>,mockList.get(<span class="number">999</span>));                      </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="监控真实对象"><a href="#监控真实对象" class="headerlink" title="监控真实对象"></a>监控真实对象</h3><p>使用spy来监控真实的对象，需要注意的是此时我们需要谨慎的使用when-then语句，而改用do-when语句</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span>(expected = IndexOutOfBoundsException.class)  </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">spy_on_real_objects</span><span class="params">()</span></span>&#123;  </div><div class="line">    List list = <span class="keyword">new</span> LinkedList();  </div><div class="line">    List spy = spy(list);  </div><div class="line">    <span class="comment">//下面预设的spy.get(0)会报错，因为会调用真实对象的get(0)，所以会抛出越界异常  </span></div><div class="line">    <span class="comment">//when(spy.get(0)).thenReturn(3);  </span></div><div class="line">   </div><div class="line">    <span class="comment">//使用doReturn-when可以避免when-thenReturn调用真实对象api  </span></div><div class="line">    doReturn(<span class="number">999</span>).when(spy).get(<span class="number">999</span>);  </div><div class="line">    <span class="comment">//预设size()期望值  </span></div><div class="line">    when(spy.size()).thenReturn(<span class="number">100</span>);  </div><div class="line">    <span class="comment">//调用真实对象的api  </span></div><div class="line">    spy.add(<span class="number">1</span>);  </div><div class="line">    spy.add(<span class="number">2</span>);  </div><div class="line">    assertEquals(<span class="number">100</span>,spy.size());  </div><div class="line">    assertEquals(<span class="number">1</span>,spy.get(<span class="number">0</span>));  </div><div class="line">    assertEquals(<span class="number">2</span>,spy.get(<span class="number">1</span>));  </div><div class="line">    verify(spy).add(<span class="number">1</span>);  </div><div class="line">    verify(spy).add(<span class="number">2</span>);  </div><div class="line">    assertEquals(<span class="number">999</span>,spy.get(<span class="number">999</span>));  </div><div class="line">    spy.get(<span class="number">2</span>);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="修改对未预设的调用返回默认期望值"><a href="#修改对未预设的调用返回默认期望值" class="headerlink" title="修改对未预设的调用返回默认期望值"></a>修改对未预设的调用返回默认期望值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span> </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unstubbed_invocations</span><span class="params">()</span></span>&#123;  </div><div class="line">    <span class="comment">//mock对象使用Answer来对未预设的调用返回默认期望值  </span></div><div class="line">    List mock = mock(List.class,<span class="keyword">new</span> Answer() &#123;  </div><div class="line">        <span class="meta">@Override</span> </div><div class="line">        <span class="function"><span class="keyword">public</span> Object <span class="title">answer</span><span class="params">(InvocationOnMock invocation)</span> <span class="keyword">throws</span> Throwable </span>&#123;  </div><div class="line">            <span class="keyword">return</span> <span class="number">999</span>;  </div><div class="line">        &#125;  </div><div class="line">    &#125;);  </div><div class="line">    <span class="comment">//下面的get(1)没有预设，通常情况下会返回NULL，但是使用了Answer改变了默认期望值  </span></div><div class="line">    assertEquals(<span class="number">999</span>, mock.get(<span class="number">1</span>));  </div><div class="line">    <span class="comment">//下面的size()没有预设，通常情况下会返回0，但是使用了Answer改变了默认期望值  </span></div><div class="line">    assertEquals(<span class="number">999</span>,mock.size());  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="捕获参数来进一步断言"><a href="#捕获参数来进一步断言" class="headerlink" title="捕获参数来进一步断言"></a>捕获参数来进一步断言</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span> </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">capturing_args</span><span class="params">()</span></span>&#123;  </div><div class="line">    PersonDao personDao = mock(PersonDao.class);  </div><div class="line">    PersonService personService = <span class="keyword">new</span> PersonService(personDao);  </div><div class="line">   </div><div class="line">    ArgumentCaptor&lt;Person&gt; argument = ArgumentCaptor.forClass(Person.class);  </div><div class="line">    personService.update(<span class="number">1</span>,<span class="string">"jack"</span>);  </div><div class="line">    verify(personDao).update(argument.capture());  </div><div class="line">    assertEquals(<span class="number">1</span>,argument.getValue().getId());  </div><div class="line">    assertEquals(<span class="string">"jack"</span>,argument.getValue().getName());  </div><div class="line">&#125;  </div><div class="line">   </div><div class="line"> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;  </div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> id;  </div><div class="line">    <span class="keyword">private</span> String name;  </div><div class="line">   </div><div class="line">    Person(<span class="keyword">int</span> id, String name) &#123;  </div><div class="line">        <span class="keyword">this</span>.id = id;  </div><div class="line">        <span class="keyword">this</span>.name = name;  </div><div class="line">    &#125;  </div><div class="line">   </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getId</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> id;  </div><div class="line">    &#125;  </div><div class="line">   </div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;  </div><div class="line">        <span class="keyword">return</span> name;  </div><div class="line">    &#125;  </div><div class="line">&#125;  </div><div class="line">   </div><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">PersonDao</span></span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(Person person)</span></span>;  </div><div class="line">&#125;  </div><div class="line">   </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PersonService</span></span>&#123;  </div><div class="line">    <span class="keyword">private</span> PersonDao personDao;  </div><div class="line">   </div><div class="line">    PersonService(PersonDao personDao) &#123;  </div><div class="line">        <span class="keyword">this</span>.personDao = personDao;  </div><div class="line">    &#125;  </div><div class="line">   </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">update</span><span class="params">(<span class="keyword">int</span> id,String name)</span></span>&#123;  </div><div class="line">        personDao.update(<span class="keyword">new</span> Person(id,name));  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="真实的部分mock"><a href="#真实的部分mock" class="headerlink" title="真实的部分mock"></a>真实的部分mock</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span> </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">real_partial_mock</span><span class="params">()</span></span>&#123;  </div><div class="line">    <span class="comment">//通过spy来调用真实的api  </span></div><div class="line">    List list = spy(<span class="keyword">new</span> ArrayList());  </div><div class="line">    assertEquals(<span class="number">0</span>,list.size());  </div><div class="line">    A a  = mock(A.class);  </div><div class="line">    <span class="comment">//通过thenCallRealMethod来调用真实的api  </span></div><div class="line">    when(a.doSomething(anyInt())).thenCallRealMethod();  </div><div class="line">    assertEquals(<span class="number">999</span>,a.doSomething(<span class="number">999</span>));  </div><div class="line">&#125;  </div><div class="line">   </div><div class="line">   </div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;  </div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">doSomething</span><span class="params">(<span class="keyword">int</span> i)</span></span>&#123;  </div><div class="line">        <span class="keyword">return</span> i;  </div><div class="line">    &#125;  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="重置mock"><a href="#重置mock" class="headerlink" title="重置mock"></a>重置mock</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Test</span> </div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">reset_mock</span><span class="params">()</span></span>&#123;  </div><div class="line">    List list = mock(List.class);  </div><div class="line">    when(list.size()).thenReturn(<span class="number">10</span>);  </div><div class="line">    list.add(<span class="number">1</span>);  </div><div class="line">    assertEquals(<span class="number">10</span>,list.size());  </div><div class="line">    <span class="comment">//重置mock，清除所有的互动和预设  </span></div><div class="line">    reset(list);  </div><div class="line">    assertEquals(<span class="number">0</span>,list.size());  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://www.importnew.com/24741.html" target="_blank" rel="external">http://www.importnew.com/24741.html</a></p>
+<p><a href="http://www.importnew.com/21153.html" target="_blank" rel="external">http://www.importnew.com/21153.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/27/java-basic-log4j/" rel="next" title="Java基础-log4j">
+                <i class="fa fa-chevron-left"></i> Java基础-log4j
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/29/java-basic-quartz/" rel="prev" title="Java基础-quartz">
+                Java基础-quartz <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Gradle配置"><span class="nav-number">2.</span> <span class="nav-text">Gradle配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">3.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#验证行为"><span class="nav-number">3.1.</span> <span class="nav-text">验证行为</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟我们所期望的结果"><span class="nav-number">3.2.</span> <span class="nav-text">模拟我们所期望的结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟我们期待的异常"><span class="nav-number">3.3.</span> <span class="nav-text">模拟我们期待的异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数匹配"><span class="nav-number">3.4.</span> <span class="nav-text">参数匹配</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#匹配自己想要的任意参数"><span class="nav-number">3.5.</span> <span class="nav-text">匹配自己想要的任意参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证确切的调用次数"><span class="nav-number">3.6.</span> <span class="nav-text">验证确切的调用次数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟方法抛出异常"><span class="nav-number">3.7.</span> <span class="nav-text">模拟方法抛出异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模拟执行顺序"><span class="nav-number">3.8.</span> <span class="nav-text">模拟执行顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确保模拟对象上无互动发生"><span class="nav-number">3.9.</span> <span class="nav-text">确保模拟对象上无互动发生</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#找出冗余的互动-即未被验证到的"><span class="nav-number">3.10.</span> <span class="nav-text">找出冗余的互动(即未被验证到的)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用注解的方式来快速模拟"><span class="nav-number">3.11.</span> <span class="nav-text">使用注解的方式来快速模拟</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#连续调用"><span class="nav-number">3.12.</span> <span class="nav-text">连续调用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用回调生成期望值"><span class="nav-number">3.13.</span> <span class="nav-text">使用回调生成期望值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#监控真实对象"><span class="nav-number">3.14.</span> <span class="nav-text">监控真实对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改对未预设的调用返回默认期望值"><span class="nav-number">3.15.</span> <span class="nav-text">修改对未预设的调用返回默认期望值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#捕获参数来进一步断言"><span class="nav-number">3.16.</span> <span class="nav-text">捕获参数来进一步断言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#真实的部分mock"><span class="nav-number">3.17.</span> <span class="nav-text">真实的部分mock</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重置mock"><span class="nav-number">3.18.</span> <span class="nav-text">重置mock</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

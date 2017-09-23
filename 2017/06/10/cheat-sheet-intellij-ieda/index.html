@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言最近准备入手IDEA玩玩，因为之前有过一段时间热衷于使用PyCharm开发Python，后来有段时间没写Python现在又忘记差不多了。这次准备边学习，边记录。">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IDEA备忘录">
+<meta property="og:url" content="http://kimisme.com/2017/06/10/cheat-sheet-intellij-ieda/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言最近准备入手IDEA玩玩，因为之前有过一段时间热衷于使用PyCharm开发Python，后来有段时间没写Python现在又忘记差不多了。这次准备边学习，边记录。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610011.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610012.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610013.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610014.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610001.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610002.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610003.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610004.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610005.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610006.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610007.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610009.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610008.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170610010.png">
+<meta property="og:updated_time" content="2017-06-10T09:29:35.656Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="IDEA备忘录">
+<meta name="twitter:description" content="前言最近准备入手IDEA玩玩，因为之前有过一段时间热衷于使用PyCharm开发Python，后来有段时间没写Python现在又忘记差不多了。这次准备边学习，边记录。">
+<meta name="twitter:image" content="http://om9xacvdp.bkt.clouddn.com/20170610011.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/06/10/cheat-sheet-intellij-ieda/"/>
+
+
+
+
+
+  <title>IDEA备忘录 | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/06/10/cheat-sheet-intellij-ieda/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">IDEA备忘录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-10T10:26:20+08:00">
+                2017-06-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Cheat-Sheet/" itemprop="url" rel="index">
+                    <span itemprop="name">Cheat-Sheet</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近准备入手IDEA玩玩，因为之前有过一段时间热衷于使用PyCharm开发Python，后来有段时间没写Python现在又忘记差不多了。这次准备边学习，边记录。</p>
+<a id="more"></a>
+<h2 id="主题配置"><a href="#主题配置" class="headerlink" title="主题配置"></a>主题配置</h2><h3 id="Sublime-Monokai主题"><a href="#Sublime-Monokai主题" class="headerlink" title="Sublime-Monokai主题"></a>Sublime-Monokai主题</h3><p><strong>下载主题包</strong></p>
+<p><a href="https://github.com/y3sh/Intellij-Colors-Sublime-Monokai" target="_blank" rel="external">https://github.com/y3sh/Intellij-Colors-Sublime-Monokai</a></p>
+<p><strong>导入主题包</strong></p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170610011.png" alt="20170610011"></p>
+<p><strong>配置主题包</strong></p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170610012.png" alt="20170610012"></p>
+<h3 id="护眼主题"><a href="#护眼主题" class="headerlink" title="护眼主题"></a>护眼主题</h3><p><strong>设置字体大小</strong></p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170610013.png" alt="20170610013"></p>
+<p><strong>设置背景色</strong> </p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170610014.png" alt="20170610014"></p>
+<h3 id="其他主题"><a href="#其他主题" class="headerlink" title="其他主题"></a>其他主题</h3><p><a href="http://www.easycolor.cc/index.php/Index/exlist/tid/1" target="_blank" rel="external">http://www.easycolor.cc/index.php/Index/exlist/tid/1</a></p>
+<h2 id="优化配置"><a href="#优化配置" class="headerlink" title="优化配置"></a>优化配置</h2><h3 id="显示行号"><a href="#显示行号" class="headerlink" title="显示行号"></a>显示行号</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610001.png" alt="20170610001"></p>
+<h3 id="取消拼音检查"><a href="#取消拼音检查" class="headerlink" title="取消拼音检查"></a>取消拼音检查</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610002.png" alt="20170610002"></p>
+<h3 id="关闭自动保存"><a href="#关闭自动保存" class="headerlink" title="关闭自动保存"></a>关闭自动保存</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610003.png" alt="20170610003"></p>
+<h3 id="未保存显示星号"><a href="#未保存显示星号" class="headerlink" title="未保存显示星号"></a>未保存显示星号</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610004.png" alt="20170610004"></p>
+<h3 id="开启序列号检测"><a href="#开启序列号检测" class="headerlink" title="开启序列号检测"></a>开启序列号检测</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610005.png" alt="20170610005"></p>
+<h3 id="修改资源文件的编码"><a href="#修改资源文件的编码" class="headerlink" title="修改资源文件的编码"></a>修改资源文件的编码</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610006.png" alt="20170610006"></p>
+<h3 id="修改快捷键"><a href="#修改快捷键" class="headerlink" title="修改快捷键"></a>修改快捷键</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610007.png" alt="20170610007"></p>
+<h3 id="隐藏没用的文件"><a href="#隐藏没用的文件" class="headerlink" title="隐藏没用的文件"></a>隐藏没用的文件</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610009.png" alt="20170610009"></p>
+<h3 id="代码提示不区分大小写"><a href="#代码提示不区分大小写" class="headerlink" title="代码提示不区分大小写"></a>代码提示不区分大小写</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610008.png" alt="20170610008"></p>
+<h3 id="自动import类型"><a href="#自动import类型" class="headerlink" title="自动import类型"></a>自动import类型</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610010.png" alt="20170610010"></p>
+<h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><p><strong>参考文章</strong></p>
+<p><a href="http://blog.csdn.net/dc_726/article/details/42784275" target="_blank" rel="external">http://blog.csdn.net/dc_726/article/details/42784275</a></p>
+<p><strong>创建main()方法</strong></p>
+<p>方式一：输入<code>main</code>，然后按快捷键<code>Ctrl+J</code><br>方式二：输入<code>psvm</code></p>
+<p><strong>快速System.out.println()</strong></p>
+<p>输入<code>sout</code></p>
+<p><strong>快速for(int i;i&lt;2;i++)循环</strong></p>
+<p>输入<code>fori</code></p>
+<p><strong>快速重构</strong></p>
+<p>选中需要重构的代码块，然后按快捷键<code>Ctrl+Shift+Alt+T</code></p>
+<p><strong>快速重命名</strong></p>
+<p>选中需要重命名的变量或方法名，然后按快捷键<code>Shift+F6</code></p>
+<p><strong>代码格式化</strong></p>
+<p>方法一：按快捷键<code>Ctrl+Shift+Alt+L</code><br>方法二：按快捷键<code>Ctrl+Shift+A</code>，然后输入<code>reformat code</code></p>
+<p><strong>删除某一行</strong></p>
+<p>按快捷键<code>Ctrl+Y</code></p>
+<p><strong>代码注释</strong></p>
+<p>方式一：快捷键<code>Ctrl+/</code><br>方式二：快捷键<code>Ctrl+Shift+/</code></p>
+<p><strong>快速解决</strong></p>
+<p>快捷键<code>Alt+Enter</code></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/07/metronic-overview/" rel="next" title="metronic-overview">
+                <i class="fa fa-chevron-left"></i> metronic-overview
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/10/dot-net-app-crack/" rel="prev" title="C#程序破解">
+                C#程序破解 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#主题配置"><span class="nav-number">2.</span> <span class="nav-text">主题配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sublime-Monokai主题"><span class="nav-number">2.1.</span> <span class="nav-text">Sublime-Monokai主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#护眼主题"><span class="nav-number">2.2.</span> <span class="nav-text">护眼主题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他主题"><span class="nav-number">2.3.</span> <span class="nav-text">其他主题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化配置"><span class="nav-number">3.</span> <span class="nav-text">优化配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#显示行号"><span class="nav-number">3.1.</span> <span class="nav-text">显示行号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#取消拼音检查"><span class="nav-number">3.2.</span> <span class="nav-text">取消拼音检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关闭自动保存"><span class="nav-number">3.3.</span> <span class="nav-text">关闭自动保存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#未保存显示星号"><span class="nav-number">3.4.</span> <span class="nav-text">未保存显示星号</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开启序列号检测"><span class="nav-number">3.5.</span> <span class="nav-text">开启序列号检测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改资源文件的编码"><span class="nav-number">3.6.</span> <span class="nav-text">修改资源文件的编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改快捷键"><span class="nav-number">3.7.</span> <span class="nav-text">修改快捷键</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐藏没用的文件"><span class="nav-number">3.8.</span> <span class="nav-text">隐藏没用的文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码提示不区分大小写"><span class="nav-number">3.9.</span> <span class="nav-text">代码提示不区分大小写</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动import类型"><span class="nav-number">3.10.</span> <span class="nav-text">自动import类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用快捷键"><span class="nav-number">4.</span> <span class="nav-text">常用快捷键</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

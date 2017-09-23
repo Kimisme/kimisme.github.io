@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言本文主要介绍在多线程开发中，对于并发读取数据的一种处理方式。">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java系列-Synchronized与Volatile的原理">
+<meta property="og:url" content="http://kimisme.com/2017/06/10/java-basic-synchronized-volatile/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言本文主要介绍在多线程开发中，对于并发读取数据的一种处理方式。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-06-11T14:04:57.420Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java系列-Synchronized与Volatile的原理">
+<meta name="twitter:description" content="前言本文主要介绍在多线程开发中，对于并发读取数据的一种处理方式。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/06/10/java-basic-synchronized-volatile/"/>
+
+
+
+
+
+  <title>Java系列-Synchronized与Volatile的原理 | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/06/10/java-basic-synchronized-volatile/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java系列-Synchronized与Volatile的原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-10T22:04:30+08:00">
+                2017-06-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Java-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要介绍在多线程开发中，对于并发读取数据的一种处理方式。</p>
+<a id="more"></a>
+<h2 id="可见性"><a href="#可见性" class="headerlink" title="可见性"></a>可见性</h2><p><strong>可见性是说操作结果其他线程是否可见</strong></p>
+<p>可见性，是针对线程来说的，即一个线程对共享变量值的修改，能够及时地被其他线程看到。</p>
+<p>如果一个变量在多个线程的工作内存中都存在副本，那么这个变量就是这几个线程的共享变量。</p>
+<p>比如有一个整型变量<code>number=1</code>，线程A做了<code>number+=1</code>的写操作，那么线程B在读取<code>number</code>的时候，就应该是<code>2</code>，而不应该还是<code>1</code>.</p>
+<p><strong>导致共享变量在线程间不可见的原因</strong></p>
+<ol>
+<li>线程的交叉执行（原子性）</li>
+<li>重排序结合线程交叉执行（原子性）</li>
+<li>共享变量更新后的值没有在工作内存与主内存间及时更新（可见性）</li>
+</ol>
+<h2 id="原子性"><a href="#原子性" class="headerlink" title="原子性"></a>原子性</h2><p><strong>一个操作是否可分割</strong></p>
+<p>字面上理解，原子是世界上最小的单位，具有不可分割的特性。在代码层面上可以理解为，一个操作不能再被分割成更小的颗粒度。比如：<code>a++</code>，它实际上是两个步骤：首先做加法<code>temp=a+1</code>，然后再赋值<code>a=temp</code>。所以<code>a++</code>不是一个原子操作。如果一个操作是原子操作，那么我们就称它具有原子性。原子性可以理解为</p>
+<h2 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h2><p><strong>什么是重排序</strong></p>
+<p>为了是提升编译器和处理的执行效率，而对程序代码做了先后顺序调整。</p>
+<p><strong>为什么要重排序</strong></p>
+<p>指令重排序是编译器或处理器为了提高程序性能而做的优化。主要包括以下几方面：</p>
+<ol>
+<li>编译器优化的重排序(编译器优化)</li>
+<li>指令集并行重排序(处理器优化)</li>
+<li>内存系统的重排序(处理器优化)</li>
+</ol>
+<p><strong>重排序例子一</strong></p>
+<p>如果代码顺序如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> number=<span class="number">1</span>;</div><div class="line"><span class="keyword">int</span> result=<span class="number">0</span>;</div></pre></td></tr></table></figure>
+<p>重排序后，执行顺序可能是</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> result=<span class="number">0</span>;</div><div class="line"><span class="keyword">int</span> number=<span class="number">1</span>;</div></pre></td></tr></table></figure>
+<p><strong>重排序例子二</strong></p>
+<p>以下代码也是可以被重排序的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (ready) &#123;      </div><div class="line">	result = number * <span class="number">3</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因为number的运算与ready是没有数据依赖关系的，他可以被重排序成以下代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">int</span> temp = number*<span class="number">3</span>;</div><div class="line"><span class="keyword">if</span>(ready)&#123;</div><div class="line">	result = temp;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>重排序带来的问题</strong></p>
+<p>重排序不会给单线程带来内存可见性问题；<br>多线程中程序交错执行时，重排序可能会造成内存可见性问题。</p>
+<p><strong>as-if-serial语义</strong></p>
+<p>这里就引出了一个概念，代码重排序后，执行的结果的变化。我们称这个约束为<code>as-if-serial</code>，即无论如何重排序，程序执行的结果应该与代码顺序执行的结果一致。</p>
+<blockquote>
+<p>Java编译器、运行时和处理器都会保证Java在单线程下遵循as-if-serial语义</p>
+</blockquote>
+<h2 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h2><p>Java内存模型(Java Memory Model)描述了Java程序中各种变量(线程共享变量)的访问规则，以及在JVM中将变量存储到内存和从内存中读取变量这样的细节。</p>
+<ul>
+<li>所有的变量都是存储在主内存中的</li>
+<li>每个线程都有自己独立的工作内存，里面保存该线程使用到的变量的副本</li>
+<li>线程对共享变量的所有操作都必须在自己的工作内存中进行，不能直接从主内存中读写</li>
+<li>不同线程之间无法直接访问其他线程工作内存中的变量，线程间变量值的传递需要通过主内存来完成</li>
+</ul>
+<p><img src="" alt=""></p>
+<h2 id="Synchronized"><a href="#Synchronized" class="headerlink" title="Synchronized"></a>Synchronized</h2><h3 id="代码清单"><a href="#代码清单" class="headerlink" title="代码清单"></a>代码清单</h3><p>完整代码如下，然后我们再一步步分析</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SynchronizedDemo</span> </span>&#123;</div><div class="line">	<span class="comment">// 共享变量</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> ready = <span class="keyword">false</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> result = <span class="number">0</span>;</div><div class="line">	<span class="keyword">private</span> <span class="keyword">int</span> number = <span class="number">1</span>;</div><div class="line"></div><div class="line">	<span class="comment">// 写操作</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span> </span>&#123;</div><div class="line">		ready = <span class="keyword">true</span>; <span class="comment">// 1.1</span></div><div class="line">		<span class="comment">//为了测试，让写操作稍微延迟一点</span></div><div class="line"><span class="comment">//		try &#123;</span></div><div class="line"><span class="comment">//			Thread.sleep(1000);</span></div><div class="line"><span class="comment">//		&#125; catch (InterruptedException e) &#123;</span></div><div class="line"><span class="comment">//			e.printStackTrace();</span></div><div class="line"><span class="comment">//		&#125;</span></div><div class="line">		number = <span class="number">2</span>; <span class="comment">// 1.2</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 读操作</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="keyword">if</span> (ready) &#123; <span class="comment">// 2.1</span></div><div class="line">			result = number * <span class="number">3</span>; <span class="comment">// 2.2</span></div><div class="line">		&#125;</div><div class="line">		System.out.println(<span class="string">"result的值为："</span> + result);</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="comment">// 内部线程类</span></div><div class="line">	<span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">ReadWriteThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</div><div class="line">		<span class="comment">// 根据构造方法中传入的flag参数，确定线程执行读操作还是写操作</span></div><div class="line">		<span class="keyword">private</span> <span class="keyword">boolean</span> flag;</div><div class="line"></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="title">ReadWriteThread</span><span class="params">(<span class="keyword">boolean</span> flag)</span> </span>&#123;</div><div class="line">			<span class="keyword">this</span>.flag = flag;</div><div class="line">		&#125;</div><div class="line"></div><div class="line">		<span class="meta">@Override</span></div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">			<span class="keyword">if</span> (flag) &#123;</div><div class="line">				<span class="comment">// 构造方法中传入true，执行写操作</span></div><div class="line">				write();</div><div class="line">			&#125; <span class="keyword">else</span> &#123;</div><div class="line">				<span class="comment">// 构造方法中传入false，执行读操作</span></div><div class="line">				read();</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		SynchronizedDemo synDemo = <span class="keyword">new</span> SynchronizedDemo();</div><div class="line">		<span class="comment">// 启动线程执行写操作</span></div><div class="line">		synDemo.new ReadWriteThread(<span class="keyword">true</span>).start();</div><div class="line">		<span class="comment">// 启动线程执行读操作</span></div><div class="line">		synDemo.new ReadWriteThread(<span class="keyword">false</span>).start();</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在<code>SynchronizedDemo</code>中有3个共享变量。有两个操作：<code>写操作</code>和<code>读操作</code>。还有一个线程类：它的功能比较简单就是，通过构造函数传入一个<code>boolean</code>来执行不同的方法。如果为<code>true</code>就执行写操作，如果是<code>false</code>就执行读操作。</p>
+<h3 id="几种结果"><a href="#几种结果" class="headerlink" title="几种结果"></a>几种结果</h3><p>因为<code>写</code>和<code>读</code>是再两个线程里面，那么就涉及到先后顺序了。<br>结果一：如果执行顺序是<code>ready=true</code>-&gt;<code>number=2</code>-&gt;<code>if(ready){}</code>-&gt;<code>result=number*3</code>，那么输出result的结果就是<code>6</code><br>结果二：如果执行顺序是<code>ready=true</code>-&gt;<code>if(ready){}</code>-&gt;<code>result=number*3</code>-&gt;<code>number=2</code>，那么输出的result结果就是<code>3</code><br>结果三：如果执行顺序是<code>number=2</code>-&gt;<code>if(ready){}</code>-&gt;<code>result=number*3</code>-&gt;<code>ready=true</code>。因为此时ready=false,那么输出的结果就是<code>0</code></p>
+<h3 id="解决可见性问题"><a href="#解决可见性问题" class="headerlink" title="解决可见性问题"></a>解决可见性问题</h3><p>我们修改写方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 写操作                                  </span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">write</span><span class="params">()</span> </span>&#123;      </div><div class="line">	ready = <span class="keyword">true</span>; <span class="comment">// 1.1                </span></div><div class="line">	<span class="comment">//为了测试，让写操作稍微延迟一点                   </span></div><div class="line">	<span class="keyword">try</span> &#123;                               </div><div class="line">		Thread.sleep(<span class="number">1000</span>);             </div><div class="line">	&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;  </div><div class="line">		e.printStackTrace();            </div><div class="line">	&#125;                                   </div><div class="line">	number = <span class="number">2</span>; <span class="comment">// 1.2                  </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再修改读方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// 读操作                                                </span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">read</span><span class="params">()</span> </span>&#123;                     </div><div class="line">	<span class="keyword">if</span> (ready) &#123; <span class="comment">// 2.1                               </span></div><div class="line">		result = number * <span class="number">3</span>; <span class="comment">// 2.2                   </span></div><div class="line">	&#125;                                                 </div><div class="line">	System.out.println(<span class="string">"result的值为："</span> + result);        </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们再次运行程序，不管运行多少次，结果都是<code>6</code></p>
+<h3 id="Synchronized的实现过程"><a href="#Synchronized的实现过程" class="headerlink" title="Synchronized的实现过程"></a>Synchronized的实现过程</h3><ol>
+<li>获得互斥锁</li>
+<li>清空工作内存</li>
+<li>从主内存拷贝变量的最新副本到工作内存</li>
+<li>执行代码</li>
+<li>将更改后的共享变量的值刷新到主内存</li>
+<li>释放互斥锁</li>
+</ol>
+<h2 id="Volatile"><a href="#Volatile" class="headerlink" title="Volatile"></a>Volatile</h2><h3 id="Volatile如何实现内存可见性"><a href="#Volatile如何实现内存可见性" class="headerlink" title="Volatile如何实现内存可见性"></a>Volatile如何实现内存可见性</h3><ul>
+<li>对volatile变量执行写操作时，会在写操作后加入一条store屏障指令</li>
+<li>对volatile变量执行读操作时，会在读操作前加入一条load屏障指令</li>
+</ul>
+<p>加入这两条执行的结果就是：volatile变量在每次被线程访问时，都被迫从主内存中重读该变量的值，而当该变量发生变化时，又会强迫线程将最新的值刷新到主内存中。这样任何时刻，不同的线程总能看到该变量的最新值。</p>
+<h3 id="代码清单-1"><a href="#代码清单-1" class="headerlink" title="代码清单"></a>代码清单</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">VolatileDemo</span> </span>&#123;</div><div class="line">	<span class="comment">//共享变量</span></div><div class="line">	<span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">int</span> number=<span class="number">0</span>;</div><div class="line">	</div><div class="line">	<span class="comment">//自增</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span></span>&#123;</div><div class="line">		<span class="keyword">try</span> &#123;</div><div class="line">			Thread.sleep(<span class="number">100</span>);</div><div class="line">		&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</div><div class="line">			<span class="comment">// TODO Auto-generated catch block</span></div><div class="line">			e.printStackTrace();</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">this</span>.number++;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="comment">//获取共享变量</span></div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNumber</span><span class="params">()</span></span>&#123;</div><div class="line">		<span class="keyword">return</span> <span class="keyword">this</span>.number;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		<span class="keyword">final</span> VolatileDemo volDemo=<span class="keyword">new</span> VolatileDemo();</div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">500</span>;i++)&#123;</div><div class="line">			<span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</div><div class="line">				</div><div class="line">				<span class="meta">@Override</span></div><div class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">					volDemo.increase();</div><div class="line">				&#125;</div><div class="line">			&#125;).start();</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">while</span>(Thread.activeCount()&gt;<span class="number">1</span>)&#123;</div><div class="line">			Thread.yield();</div><div class="line">		&#125;</div><div class="line">		System.out.println(<span class="string">"number="</span>+volDemo.getNumber());</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>运行上面的程序，输出的结果是不确定的。我们得出了一个结论</p>
+<ul>
+<li>volatile能够保证变量的可见性</li>
+<li>volatile不能保证符合操作的原子性</li>
+</ul>
+<p>要保证符合操作的原子性，我们可以这么操作</p>
+<p>方式一：使用aynchronized保证变量在线程中的原子性</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span></span>&#123;                    </div><div class="line">	<span class="keyword">try</span> &#123;                                  </div><div class="line">		Thread.sleep(<span class="number">100</span>);                 </div><div class="line">	&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;     </div><div class="line">		<span class="comment">// TODO Auto-generated catch block </span></div><div class="line">		e.printStackTrace();               </div><div class="line">	&#125;                                      </div><div class="line">	                                       </div><div class="line">	<span class="keyword">synchronized</span> (<span class="keyword">this</span>) &#123;                  </div><div class="line">		<span class="keyword">this</span>.number++;                     </div><div class="line">	&#125;                                      </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>方式二：用ReentrantLock实现变量在线程中的原子性</p>
+<p>引入Lock</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> Lock lock=<span class="keyword">new</span> ReentrantLock();</div></pre></td></tr></table></figure>
+<p>开始加锁</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span></span>&#123;                      </div><div class="line">	<span class="keyword">try</span> &#123;                                    </div><div class="line">		Thread.sleep(<span class="number">100</span>);                   </div><div class="line">	&#125; <span class="keyword">catch</span> (InterruptedException e) &#123;       </div><div class="line">		<span class="comment">// TODO Auto-generated catch block   </span></div><div class="line">		e.printStackTrace();                 </div><div class="line">	&#125;                                        </div><div class="line">	                                         </div><div class="line">	lock.lock();                             </div><div class="line">	<span class="keyword">try</span>&#123;                                     </div><div class="line">		<span class="keyword">this</span>.number++;                       </div><div class="line">	&#125;<span class="keyword">finally</span>&#123;                                </div><div class="line">		lock.unlock();                       </div><div class="line">	&#125;                                        </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/10/dot-net-app-crack/" rel="next" title="C#程序破解">
+                <i class="fa fa-chevron-left"></i> C#程序破解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/11/grace-where-did-i-come-from/" rel="prev" title="我从哪里来，要往哪里去">
+                我从哪里来，要往哪里去 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可见性"><span class="nav-number">2.</span> <span class="nav-text">可见性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原子性"><span class="nav-number">3.</span> <span class="nav-text">原子性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#重排序"><span class="nav-number">4.</span> <span class="nav-text">重排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java内存模型"><span class="nav-number">5.</span> <span class="nav-text">Java内存模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Synchronized"><span class="nav-number">6.</span> <span class="nav-text">Synchronized</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#代码清单"><span class="nav-number">6.1.</span> <span class="nav-text">代码清单</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#几种结果"><span class="nav-number">6.2.</span> <span class="nav-text">几种结果</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决可见性问题"><span class="nav-number">6.3.</span> <span class="nav-text">解决可见性问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Synchronized的实现过程"><span class="nav-number">6.4.</span> <span class="nav-text">Synchronized的实现过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Volatile"><span class="nav-number">7.</span> <span class="nav-text">Volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Volatile如何实现内存可见性"><span class="nav-number">7.1.</span> <span class="nav-text">Volatile如何实现内存可见性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码清单-1"><span class="nav-number">7.2.</span> <span class="nav-text">代码清单</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

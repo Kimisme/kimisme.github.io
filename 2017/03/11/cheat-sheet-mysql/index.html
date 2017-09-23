@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Database," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言工作中，参与一个重构的项目，使用的是mysql。这篇文章就记录mysql的一些常用操作，持续更新中。">
+<meta name="keywords" content="Database">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql 备忘录">
+<meta property="og:url" content="http://kimisme.com/2017/03/11/cheat-sheet-mysql/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言工作中，参与一个重构的项目，使用的是mysql。这篇文章就记录mysql的一些常用操作，持续更新中。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-06-05T12:28:08.816Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql 备忘录">
+<meta name="twitter:description" content="前言工作中，参与一个重构的项目，使用的是mysql。这篇文章就记录mysql的一些常用操作，持续更新中。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/03/11/cheat-sheet-mysql/"/>
+
+
+
+
+
+  <title>mysql 备忘录 | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/03/11/cheat-sheet-mysql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mysql 备忘录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-11T16:14:02+08:00">
+                2017-03-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Cheat-Sheet/" itemprop="url" rel="index">
+                    <span itemprop="name">Cheat-Sheet</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>工作中，参与一个重构的项目，使用的是mysql。这篇文章就记录mysql的一些常用操作，持续更新中。</p>
+<a id="more"></a>
+<h2 id="走进MySql"><a href="#走进MySql" class="headerlink" title="走进MySql"></a>走进MySql</h2><h3 id="MySql服务"><a href="#MySql服务" class="headerlink" title="MySql服务"></a>MySql服务</h3><p>配置环境变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">在Path中添加C:\Program Files\MySQL\MySQL Server 5.7\bin</div></pre></td></tr></table></figure>
+<p>启动服务</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">net <span class="keyword">start</span> mysql;</div></pre></td></tr></table></figure>
+<p>登录Mysql</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">mysql -h 地址 -P 端口 -u 用户名 -p;</div><div class="line">mysql -h 127.0.0.1 -P 3306 -u root -p;</div><div class="line">mysql -h 127.0.0.1 -u root -p;</div></pre></td></tr></table></figure>
+<p>登录到指定数据库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mysql -D test -h 127.0.0.1 -u root -p;</div></pre></td></tr></table></figure>
+<p>查看mysql信息</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">mysql&gt; status;</div><div class="line"><span class="comment">--------------</span></div><div class="line">mysql  Ver 14.14 Distrib 5.7.10, for Win64 (x86_64)</div><div class="line"></div><div class="line">Connection id:          15</div><div class="line">Current database:       test</div><div class="line">Current user:           root@localhost</div><div class="line">SSL:                    Not in <span class="keyword">use</span></div><div class="line"><span class="keyword">Using</span> delimiter:        ;</div><div class="line">Server version:         5.7.10-log MySQL Community Server (GPL)</div><div class="line">Protocol version:       10</div><div class="line">Connection:             127.0.0.1 via TCP/IP</div><div class="line">Server characterset:    utf8</div><div class="line">Db     characterset:    utf8</div><div class="line">Client characterset:    utf8</div><div class="line">Conn.  characterset:    utf8</div><div class="line">TCP port:               3306</div><div class="line">Uptime:                 28 min 51 sec</div></pre></td></tr></table></figure>
+<p>查看mysql版本</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select version();</div><div class="line">+<span class="comment">------------+</span></div><div class="line">| version()  |</div><div class="line">+<span class="comment">------------+</span></div><div class="line">| 5.7.10-log |</div><div class="line">+<span class="comment">------------+</span></div></pre></td></tr></table></figure>
+<p>查看mysql端口</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; show global variables like 'port';</div><div class="line">+<span class="comment">---------------+-------+</span></div><div class="line">| Variable_name | Value |</div><div class="line">+<span class="comment">---------------+-------+</span></div><div class="line">| port          | 3306  |</div><div class="line">+<span class="comment">---------------+-------+</span></div></pre></td></tr></table></figure>
+<h2 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h2><p>查看当前数据库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">databases</span>();</div></pre></td></tr></table></figure>
+<p>创建数据库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">database</span> [<span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span>] 数据库名 数据库选项</div><div class="line"><span class="keyword">create</span> <span class="keyword">database</span> samp_db <span class="built_in">character</span> <span class="keyword">set</span> utf8;；</div><div class="line"><span class="keyword">create</span> <span class="keyword">database</span> <span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span> samp_db <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div></pre></td></tr></table></figure>
+<p>查看已有库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">show</span> <span class="keyword">databases</span> [<span class="keyword">like</span> <span class="string">'pattern'</span>]</div><div class="line"><span class="keyword">show</span> <span class="keyword">databases</span> <span class="keyword">like</span> <span class="string">'sa%'</span>;</div></pre></td></tr></table></figure>
+<p>查看当前库信息</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">database</span> 数据库名</div><div class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">database</span> samp_db;</div></pre></td></tr></table></figure>
+<p>修改库的选项信息</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">database</span> 库名 选项信息</div><div class="line"><span class="keyword">alter</span> <span class="keyword">database</span> samp_db <span class="built_in">character</span> <span class="keyword">set</span> utf8;</div></pre></td></tr></table></figure>
+<p>删除库</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">drop</span> <span class="keyword">database</span> [<span class="keyword">if</span> <span class="keyword">exists</span>] 数据库名</div><div class="line"><span class="keyword">drop</span> <span class="keyword">database</span> samp_db;</div><div class="line"><span class="keyword">drop</span> <span class="keyword">database</span> <span class="keyword">if</span> <span class="keyword">exists</span> samp_db;</div><div class="line">``` </div><div class="line"></div><div class="line"></div><div class="line">## 表操作</div><div class="line"></div><div class="line">### 创建表</div><div class="line"></div><div class="line">``` sql</div><div class="line"><span class="keyword">create</span> [temporaty] <span class="keyword">table</span> [<span class="keyword">if</span> <span class="keyword">not</span> <span class="keyword">exists</span>] [库名].表名(表的结构定义)[表选项]</div></pre></td></tr></table></figure>
+<ul>
+<li>每个字段必须有数据类型</li>
+<li>最后一个字段后不能有逗号</li>
+<li>temporary临时表，回话结束时表自动消失</li>
+<li>字段的定义：字段名 数据类型 [not null][null][default default_value][auto_increment][unique[key]|[primary]key][comment ‘string’]</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> user_accounts(</div><div class="line"><span class="keyword">id</span> <span class="built_in">int</span>(<span class="number">100</span>) <span class="keyword">unsigned</span> <span class="keyword">not</span> <span class="literal">null</span> auto_increment primary <span class="keyword">key</span>,</div><div class="line">username <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">''</span> <span class="keyword">comment</span> <span class="string">'用户姓名'</span>,</div><div class="line"><span class="keyword">password</span> <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">'abc123'</span> <span class="keyword">comment</span> <span class="string">'用户密码'</span>,</div><div class="line">mobile <span class="built_in">varchar</span>(<span class="number">32</span>) <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">''</span> <span class="keyword">comment</span> <span class="string">'手机'</span>,</div><div class="line"><span class="keyword">unique</span> <span class="keyword">index</span> idx_user_mobile(mobile)</div><div class="line">)</div><div class="line"><span class="keyword">engine</span>=<span class="keyword">InnodB</span> <span class="keyword">default</span> <span class="keyword">charset</span>=utf8</div><div class="line"><span class="keyword">comment</span>=<span class="string">'用户信息表'</span>;</div></pre></td></tr></table></figure>
+<p>数据类型说明</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">数据类型</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">null</td>
+<td style="text-align:left">可空</td>
+</tr>
+<tr>
+<td style="text-align:left">not null</td>
+<td style="text-align:left">不可为空</td>
+</tr>
+<tr>
+<td style="text-align:left">default</td>
+<td style="text-align:left">默认值</td>
+</tr>
+<tr>
+<td style="text-align:left">primary key</td>
+<td style="text-align:left">主键</td>
+</tr>
+<tr>
+<td style="text-align:left">auto_increment</td>
+<td style="text-align:left">自增长</td>
+</tr>
+<tr>
+<td style="text-align:left">unsigned</td>
+<td style="text-align:left">数据类型只能为正数</td>
+</tr>
+<tr>
+<td style="text-align:left">character set name</td>
+<td style="text-align:left">指定过一个字符集编码</td>
+</tr>
+<tr>
+<td style="text-align:left">comment</td>
+<td style="text-align:left">字段说明</td>
+</tr>
+</tbody>
+</table>
+<h3 id="修改表"><a href="#修改表" class="headerlink" title="修改表"></a>修改表</h3><p>修改表本身的选项</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 表的选项</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> <span class="keyword">test</span> <span class="keyword">engine</span> = MYISAM</div></pre></td></tr></table></figure>
+<p>表重命名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">rename</span> <span class="keyword">table</span> 原表名 <span class="keyword">to</span> 库名.新表名</div><div class="line"><span class="keyword">rename</span> <span class="keyword">table</span> <span class="keyword">test</span> <span class="keyword">to</span> test_new</div><div class="line"><span class="keyword">rename</span> <span class="keyword">table</span> <span class="keyword">test</span> <span class="keyword">to</span> samp_db.test_new</div></pre></td></tr></table></figure>
+<p>删除表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> [<span class="keyword">if</span> <span class="keyword">exists</span>] 表名</div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> user_accounts;</div><div class="line"><span class="keyword">drop</span> <span class="keyword">table</span> <span class="keyword">if</span> <span class="keyword">exists</span> user_accounts;</div></pre></td></tr></table></figure>
+<p>清空表数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">truncate</span> [<span class="keyword">table</span>] 表名</div></pre></td></tr></table></figure>
+<p>复制表结构</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 <span class="keyword">like</span> 要复制的表名</div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> user_accounts_copy <span class="keyword">like</span> user_accounts;</div></pre></td></tr></table></figure>
+<p>复制表结构和数据</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> 表名 [<span class="keyword">as</span>] <span class="keyword">select</span> * <span class="keyword">from</span> 要复制的表名</div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> user_accounts_copy <span class="keyword">as</span> <span class="keyword">select</span> * <span class="keyword">from</span> user_accounts;</div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> user_accounts_copy <span class="keyword">select</span> * <span class="keyword">from</span> user_accounts;</div></pre></td></tr></table></figure>
+<p>检查表是否有错误</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> tbl_name,[tbl_name2]</div><div class="line"><span class="keyword">check</span> <span class="keyword">table</span> user_accounts,user_info;</div></pre></td></tr></table></figure>
+<p>优化表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">optimize</span> [<span class="keyword">local</span>|<span class="keyword">no_write_to_binlog</span>] <span class="keyword">table</span> tbl_name,[tbl_name2] </div><div class="line"><span class="keyword">optimize</span> <span class="keyword">local</span> <span class="keyword">table</span> user_accounts;</div></pre></td></tr></table></figure>
+<p>修复表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">repair</span> [<span class="keyword">local</span>|<span class="keyword">no_write_to_binlog</span>] <span class="keyword">table</span> tbl_name,[tbl_name2] [<span class="keyword">quick</span>] [<span class="keyword">extended</span>] [use_frm]</div><div class="line"><span class="keyword">repair</span> <span class="keyword">local</span> <span class="keyword">table</span> user_accounts;</div></pre></td></tr></table></figure>
+<p>分析表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">analyze</span> [<span class="keyword">local</span>|<span class="keyword">no_write_to_binlog</span>] <span class="keyword">table</span> tbl_name,[tbl_name2] [<span class="keyword">quick</span>] [<span class="keyword">extended</span>] [use_frm]</div><div class="line"><span class="keyword">analyze</span> <span class="keyword">table</span> user_accounts;</div></pre></td></tr></table></figure>
+<h2 id="数据操作"><a href="#数据操作" class="headerlink" title="数据操作"></a>数据操作</h2><p>增</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">insert</span> [<span class="keyword">into</span>] 表名 [(字段列表)] <span class="keyword">values</span>(值列表)</div><div class="line"><span class="comment">--如果要插入的值列表包含所有字段并且顺序一致，则可以省略字段列表</span></div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> user_accounts(username) <span class="keyword">values</span>(<span class="number">2</span>);</div><div class="line"><span class="comment">--可同时插入多条数据记录</span></div><div class="line"><span class="keyword">insert</span> <span class="keyword">into</span> user_accounts(username,mobile) </div><div class="line"><span class="keyword">values</span> (<span class="number">5</span>,<span class="number">5</span>),(<span class="number">6</span>,<span class="number">6</span>)</div></pre></td></tr></table></figure>
+<p>删</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> 表名 [删除条件子句]</div><div class="line"><span class="keyword">delete</span> <span class="keyword">from</span> user_accounts;</div></pre></td></tr></table></figure>
+<p>改</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">update</span> 表名 <span class="keyword">set</span> 字段名 = 新值 [,字段名 = 新值] [条件子句]</div><div class="line"><span class="keyword">update</span> user_accounts <span class="keyword">set</span> <span class="keyword">password</span> = <span class="string">'123'</span>;</div></pre></td></tr></table></figure>
+<p>查</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> 字段列表 <span class="keyword">from</span> 表名 [其他子句]</div><div class="line"><span class="keyword">select</span> username <span class="keyword">from</span> user_accounts <span class="keyword">where</span> <span class="keyword">length</span>(mobile)!=<span class="number">11</span>;</div></pre></td></tr></table></figure>
+<h2 id="列操作"><a href="#列操作" class="headerlink" title="列操作"></a>列操作</h2><p>添加字段</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 操作名 <span class="keyword">add</span> [<span class="keyword">column</span>] 字段名</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user <span class="keyword">add</span> hobby <span class="built_in">char</span>(<span class="number">60</span>);</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user <span class="keyword">add</span> birthday <span class="built_in">date</span> <span class="keyword">after</span> username;</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_user <span class="keyword">add</span> age <span class="built_in">int</span> <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">default</span> <span class="string">'18'</span> <span class="keyword">after</span> <span class="keyword">password</span>;</div></pre></td></tr></table></figure>
+<p>创建主键</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> primary <span class="keyword">key</span>(字段名)</div></pre></td></tr></table></figure>
+<p>创建唯一索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> <span class="keyword">unique</span> [索引名](字段名)</div></pre></td></tr></table></figure>
+<p>创建普通索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">add</span> <span class="keyword">index</span> [索引名](字段名)</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> t_metercard <span class="keyword">add</span> <span class="keyword">index</span> MeterID(MeterID);</div></pre></td></tr></table></figure>
+<p>删除字段</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">drop</span> [<span class="keyword">column</span>] 字段名</div></pre></td></tr></table></figure>
+<p>修改字段属性</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">modify</span> [<span class="keyword">column</span>] 字段名 字段属性</div></pre></td></tr></table></figure>
+<p>修改字段名</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">change</span> [<span class="keyword">column</span>] 原字段名 新字段名 字段属性</div></pre></td></tr></table></figure>
+<p>删除主键</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">drop</span> primary <span class="keyword">key</span></div></pre></td></tr></table></figure>
+<p>删除索引</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">drop</span> <span class="keyword">index</span> 索引名</div></pre></td></tr></table></figure>
+<p>删除外键</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> 表名 <span class="keyword">drop</span> foreign <span class="keyword">key</span> 外键</div></pre></td></tr></table></figure>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="数值函数"><a href="#数值函数" class="headerlink" title="数值函数"></a>数值函数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">abs</span>(<span class="number">-3.14</span>);<span class="comment">--绝对值，3.14</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">format</span>(<span class="number">3.14</span>,<span class="number">1</span>);<span class="comment">--格式化小数，3.1</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">ceil</span>(<span class="number">3.14</span>);<span class="comment">--向上取整，4</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">floor</span>(<span class="number">3.6</span>);<span class="comment">--向下取整，3</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">round</span>(<span class="number">3.14</span>);<span class="comment">--四舍五入取整，3</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">mod</span>(<span class="number">10</span>,<span class="number">3</span>);<span class="comment">--取余，1</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">pi</span>();<span class="comment">--圆周率</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">pow</span>(<span class="number">2</span>,<span class="number">3</span>);<span class="comment">--2的3次方，8</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">sqrt</span>(<span class="number">16</span>);<span class="comment">--算法平方根，4</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">rand</span>();<span class="comment">--0到1之间的随机数</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">truncate</span>(<span class="number">3.1415</span>,<span class="number">3</span>);<span class="comment">--截取3位小数</span></div></pre></td></tr></table></figure>
+<h3 id="时间日期函数"><a href="#时间日期函数" class="headerlink" title="时间日期函数"></a>时间日期函数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">now</span>();<span class="comment">--获取当前时间，2017-03-19 16:30:16</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">current_timestamp</span>();<span class="comment">--获取当前时间，2017-03-19 16:30:50</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">current_date</span>();<span class="comment">--获取当前日期，2017-03-19</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">current_time</span>();<span class="comment">--获取当前时间，16:31:33</span></div><div class="line"><span class="keyword">select</span> <span class="built_in">date</span>(<span class="keyword">now</span>());<span class="comment">--获取日期部分，2017-03-19</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">time</span>(<span class="keyword">now</span>());<span class="comment">--获取时间部分，16:34:53</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">date_format</span>(<span class="keyword">now</span>(),<span class="string">'%Y/%m/%d'</span>);<span class="comment">--格式化时间，2017/03/19</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">unix_timestamp</span>();<span class="comment">--获取unix时间戳，1489912619</span></div><div class="line"><span class="keyword">select</span> from_unixtime(<span class="number">1489912619</span>);<span class="comment">--时间戳转时间，2017-03-19 16:36:59</span></div></pre></td></tr></table></figure>
+<h3 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">length</span>(<span class="string">'杭州'</span>);<span class="comment">--几个字节长度，6</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">char_length</span>(<span class="string">'杭州'</span>);<span class="comment">--几个字符个数，2</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">substring</span>(<span class="string">'abcdef'</span>,<span class="number">1</span>,<span class="number">2</span>);<span class="comment">--字符串截取，ab</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">replace</span>(<span class="string">'abcabc'</span>,<span class="string">'ab'</span>,<span class="string">'AB'</span>);<span class="comment">--字符串替换，ABcABc</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">instr</span>(<span class="string">'abcabc'</span>,<span class="string">'b'</span>);<span class="comment">--字符第一次出现索引位置，2</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">locate</span>(<span class="string">'b'</span>,<span class="string">'abcabc'</span>,<span class="number">3</span>);<span class="comment">--字符串从3开始出现索引位置，5</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">concat</span>(<span class="string">'aa'</span>,<span class="string">'bb'</span>,<span class="string">'cc'</span>);<span class="comment">--字符串连接，aabbcc</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">charset</span>(<span class="string">'abc'</span>);<span class="comment">--字符字符集，utf8</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">lcase</span>(<span class="string">'ABC'</span>);<span class="comment">--转换成小写，abc</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">ucase</span>(<span class="string">'abc'</span>);<span class="comment">--转换成大写，ABC</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">left</span>(<span class="string">'abcdef'</span>,<span class="number">2</span>);<span class="comment">--从左边起取字符，ab</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">right</span>(<span class="string">'abcdefe'</span>,<span class="number">2</span>);<span class="comment">--从右边起取字符，fe</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">lpad</span>(<span class="string">'abc'</span>,<span class="number">8</span>,<span class="string">'0'</span>);<span class="comment">--从左开始填充，00000abc</span></div><div class="line"><span class="keyword">select</span> rpad(<span class="string">'abc'</span>,<span class="number">8</span>,<span class="string">'0'</span>);<span class="comment">--从右开始填充，abc00000</span></div><div class="line"><span class="comment">--select load_file('D:\aa.txt');--读文件，要权限</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">ltrim</span>(<span class="string">'   abc'</span>);<span class="comment">--去左空格</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">rtrim</span>(<span class="string">'abc   '</span>);<span class="comment">--去右空格</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">repeat</span>(<span class="string">'abc'</span>,<span class="number">2</span>);<span class="comment">--字符串重复，abcabc</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">strcmp</span>(<span class="string">'abc'</span>,<span class="string">'abd'</span>);<span class="comment">--字符串比较大小</span></div></pre></td></tr></table></figure>
+<h3 id="流程函数"><a href="#流程函数" class="headerlink" title="流程函数"></a>流程函数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> </div><div class="line"><span class="keyword">case</span> <span class="keyword">when</span> username=<span class="string">'1'</span> <span class="keyword">then</span> <span class="string">'用户1'</span></div><div class="line"><span class="keyword">when</span> username=<span class="string">'2'</span> <span class="keyword">then</span> <span class="string">'用户2'</span></div><div class="line"><span class="keyword">else</span> <span class="string">'用户3'</span> <span class="keyword">end</span></div><div class="line"><span class="keyword">from</span> user_accounts;</div></pre></td></tr></table></figure>
+<h3 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">from</span> <span class="keyword">user</span>;</div><div class="line"><span class="keyword">select</span> <span class="keyword">sum</span>(age) <span class="keyword">from</span> <span class="keyword">user</span>;</div><div class="line"><span class="keyword">select</span> <span class="keyword">max</span>(age) <span class="keyword">from</span> <span class="keyword">user</span>;</div><div class="line"><span class="keyword">select</span> <span class="keyword">min</span>(age) <span class="keyword">from</span> <span class="keyword">user</span>;</div><div class="line"><span class="keyword">select</span> <span class="keyword">avg</span>(age) <span class="keyword">from</span> <span class="keyword">user</span>;</div></pre></td></tr></table></figure>
+<h3 id="其他函数"><a href="#其他函数" class="headerlink" title="其他函数"></a>其他函数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">select</span> <span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">from</span> <span class="keyword">user</span>;</div></pre></td></tr></table></figure>
+<h3 id="日期与时间"><a href="#日期与时间" class="headerlink" title="日期与时间"></a>日期与时间</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">--时间格式化</span></div><div class="line"><span class="keyword">select</span> <span class="keyword">date_format</span>(<span class="keyword">now</span>(),<span class="string">'%Y-%m-%d'</span>);</div></pre></td></tr></table></figure>
+<h2 id="常用sql语句"><a href="#常用sql语句" class="headerlink" title="常用sql语句"></a>常用sql语句</h2><h3 id="变量赋值"><a href="#变量赋值" class="headerlink" title="变量赋值"></a>变量赋值</h3><p>mysql中变量在使用前不用事先声明，在用的时候，直接<code>@变量名</code>就可以了</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- 方式一：</span></div><div class="line"><span class="keyword">select</span> @<span class="keyword">num</span>:=<span class="keyword">count</span>(<span class="number">1</span>) <span class="keyword">from</span> t_company;</div><div class="line"><span class="comment">-- 方式二：</span></div><div class="line"><span class="keyword">set</span> @<span class="keyword">num</span> = <span class="number">314</span>;</div><div class="line"><span class="keyword">select</span> @<span class="keyword">num</span>;</div><div class="line"><span class="comment">-- 方式三：</span></div><div class="line"><span class="keyword">set</span> @<span class="keyword">num</span> := <span class="number">1</span>;</div><div class="line"><span class="keyword">select</span> @<span class="keyword">num</span>;</div></pre></td></tr></table></figure>
+<h3 id="统计各表记录数"><a href="#统计各表记录数" class="headerlink" title="统计各表记录数"></a>统计各表记录数</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">use</span> information_schema;</div><div class="line"></div><div class="line"><span class="keyword">select</span> table_name,table_rows <span class="keyword">from</span> <span class="keyword">tables</span> </div><div class="line"><span class="keyword">where</span> TABLE_SCHEMA = <span class="string">'db-to-mid'</span> </div><div class="line"><span class="keyword">order</span> <span class="keyword">by</span> table_rows <span class="keyword">desc</span>;</div></pre></td></tr></table></figure>
+<h3 id="给用户授权"><a href="#给用户授权" class="headerlink" title="给用户授权"></a>给用户授权</h3><pre><code class="sql"><span class="keyword">grant</span> all <span class="keyword">on</span> gs_xt.* <span class="keyword">to</span> <span class="string">'root'</span>@<span class="string">'%'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'123456'</span> <span class="keyword">with</span> <span class="keyword">grant</span> <span class="keyword">option</span>;
+</code></pre>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://segmentfault.com/a/1190000006876419" target="_blank" rel="external">https://segmentfault.com/a/1190000006876419</a><br><a href="https://juejin.im/post/584e7b298d6d81005456eb53" target="_blank" rel="external">https://juejin.im/post/584e7b298d6d81005456eb53</a><br><a href="http://www.cnblogs.com/best/p/6517755.html#_label3_4_4_6" target="_blank" rel="external">http://www.cnblogs.com/best/p/6517755.html#_label3_4_4_6</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Database/" rel="tag"># Database</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/10/cheat-sheet-sqlserver/" rel="next" title="sqlserver备忘录">
+                <i class="fa fa-chevron-left"></i> sqlserver备忘录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/13/java-basic-io/" rel="prev" title="java总结-IO">
+                java总结-IO <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#走进MySql"><span class="nav-number">2.</span> <span class="nav-text">走进MySql</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySql服务"><span class="nav-number">2.1.</span> <span class="nav-text">MySql服务</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据库操作"><span class="nav-number">3.</span> <span class="nav-text">数据库操作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改表"><span class="nav-number">3.1.</span> <span class="nav-text">修改表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据操作"><span class="nav-number">4.</span> <span class="nav-text">数据操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#列操作"><span class="nav-number">5.</span> <span class="nav-text">列操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#函数"><span class="nav-number">6.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数值函数"><span class="nav-number">6.1.</span> <span class="nav-text">数值函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#时间日期函数"><span class="nav-number">6.2.</span> <span class="nav-text">时间日期函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串函数"><span class="nav-number">6.3.</span> <span class="nav-text">字符串函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流程函数"><span class="nav-number">6.4.</span> <span class="nav-text">流程函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#聚合函数"><span class="nav-number">6.5.</span> <span class="nav-text">聚合函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他函数"><span class="nav-number">6.6.</span> <span class="nav-text">其他函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#日期与时间"><span class="nav-number">6.7.</span> <span class="nav-text">日期与时间</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用sql语句"><span class="nav-number">7.</span> <span class="nav-text">常用sql语句</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#变量赋值"><span class="nav-number">7.1.</span> <span class="nav-text">变量赋值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#统计各表记录数"><span class="nav-number">7.2.</span> <span class="nav-text">统计各表记录数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#给用户授权"><span class="nav-number">7.3.</span> <span class="nav-text">给用户授权</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">8.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

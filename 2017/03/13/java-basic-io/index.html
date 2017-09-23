@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言为什么IO包下有这么多类，存在即合理，带你一步步剖析。">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java总结-IO">
+<meta property="og:url" content="http://kimisme.com/2017/03/13/java-basic-io/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言为什么IO包下有这么多类，存在即合理，带你一步步剖析。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313002.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313001.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313003.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313004.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313005.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313006.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313007.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313008.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313009.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313010.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313011.png">
+<meta property="og:image" content="http://om9xacvdp.bkt.clouddn.com/20170313012.png">
+<meta property="og:updated_time" content="2017-07-22T09:06:28.226Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java总结-IO">
+<meta name="twitter:description" content="前言为什么IO包下有这么多类，存在即合理，带你一步步剖析。">
+<meta name="twitter:image" content="http://om9xacvdp.bkt.clouddn.com/20170313002.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/03/13/java-basic-io/"/>
+
+
+
+
+
+  <title>java总结-IO | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/03/13/java-basic-io/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java总结-IO</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-13T16:22:50+08:00">
+                2017-03-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Java-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>为什么IO包下有这么多类，存在即合理，带你一步步剖析。</p>
+<a id="more"></a>
+<h2 id="为什么需要IO操作"><a href="#为什么需要IO操作" class="headerlink" title="为什么需要IO操作"></a>为什么需要IO操作</h2><p>我们浏览网页，看到有用信息，通过收藏网页方式记录下来。我们看书，看到有感触的句子，会用本子摘录下来。我们看公众号，看到好玩的内容，就分享到朋友圈。上面三个例子，在对信息处理上有个共同点，那就是获取与记录，也即是输入与输出。</p>
+<p>输入有多种渠道，可以是网页，公众号，书籍。</p>
+<p>输出也有多种方式，可以是收藏，手抄，分享。</p>
+<p>在Java中，把这部分进行了抽象，对数据的获取过程称为<code>输入流</code>，对数据的记录称为<code>输出流</code>。</p>
+<p>对于输入的多种渠道，分别定义了多个具体的类。</p>
+<p>对于输出的多种方式，也定义了多个具体的类。</p>
+<p>如果我们想自己定义一种输入方式，java自己本身提供了大量的装饰类，当然你也可以使用<code>装饰者模式</code>定义自己的装饰类。比如：对于手抄，你是理解了一句话，再抄；还是看一个字抄一下。</p>
+<h2 id="IO体系架构"><a href="#IO体系架构" class="headerlink" title="IO体系架构"></a>IO体系架构</h2><p>所有数据都可以转化成字节，而计算机也只能识别字节，所以Java提供了字节流。</p>
+<p>因为我们写的文本都是字符方式存储的，方便人的读取，Java提供了字符流。</p>
+<p>有时候我们仅仅只是想创建一个文件，或目录，并没有涉及到输入和输出，Java也提供了操作文件与目录的File类。</p>
+<p>当我们想随机读取流中的任意部分时，就可以用RandomAccessFile。</p>
+<p>还有一些其他类：文件读取部分的与安全相关的类，如：SerializablePermission类；以及与本地操作系统相关的文件系统的类，如：FileSystem类和Win32FileSystem类和WinNTFileSystem类</p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170313002.png" alt="20170313002"></p>
+<h2 id="IO派系"><a href="#IO派系" class="headerlink" title="IO派系"></a>IO派系</h2><p>IO的各成员就如一个个派系一样，每一个派系都有自己的小团队。</p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170313001.png" alt="20170313001"></p>
+<h2 id="InputStream"><a href="#InputStream" class="headerlink" title="InputStream"></a>InputStream</h2><p>InputStream是所有输入流的父类，它定义了输入流的一些公共方法。</p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170313003.png" alt="20170313003"></p>
+<ul>
+<li>int read()：一次读一个字节</li>
+<li>int read(byte b[])：读取b.length长度的字节到b数组</li>
+<li>int read(byte b[], int off, int len)：读取指定位置字节到b数组</li>
+<li>long skip(long n)：忽略输入流中的n个字节</li>
+<li>int available()：返回输入流中可以读取的字节数</li>
+<li>void close()：关闭流</li>
+</ul>
+<h3 id="FileInputStream"><a href="#FileInputStream" class="headerlink" title="FileInputStream"></a>FileInputStream</h3><p>FileInputStream继承与InputStream</p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170313004.png" alt="20170313004"></p>
+<h3 id="ByteArrayInputStream"><a href="#ByteArrayInputStream" class="headerlink" title="ByteArrayInputStream"></a>ByteArrayInputStream</h3><p>ByteArrayInputStream继承与InputStream</p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170313005.png" alt="20170313005"></p>
+<h2 id="OutputStream"><a href="#OutputStream" class="headerlink" title="OutputStream"></a>OutputStream</h2><p>OutputStream是所有输出流的父类，定义了所有输出流公共的方法。</p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170313006.png" alt="20170313006"></p>
+<ul>
+<li>void write(int b)：往输出流中写入一个特定的字节</li>
+<li>write(byte b[])：往输出流中写入一个字节数组</li>
+<li>write(byte b[], int off, int len)：往输出流中写入指定位置的字节数组</li>
+<li>void flush()：将数据缓存去中数据全部输出，并清空缓冲区</li>
+<li>void close()：关闭输出流</li>
+</ul>
+<h3 id="FileOutputStream"><a href="#FileOutputStream" class="headerlink" title="FileOutputStream"></a>FileOutputStream</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170313007.png" alt="20170313007"></p>
+<h3 id="ByteArrayOutputStream"><a href="#ByteArrayOutputStream" class="headerlink" title="ByteArrayOutputStream"></a>ByteArrayOutputStream</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170313008.png" alt="20170313008"></p>
+<h2 id="Reader"><a href="#Reader" class="headerlink" title="Reader"></a>Reader</h2><p>Reader是所有字符输入流的父类，定义了一些公共方法</p>
+<p><img src="http://om9xacvdp.bkt.clouddn.com/20170313009.png" alt="20170313009"></p>
+<ul>
+<li>int read()：读取一个字符</li>
+<li>read(char cbuf[]):读取cbuf.length长度的字符到cbuf数组中</li>
+<li>int read(char cbuf[], int off, int len)：读取指定位置字节到cbuf数组</li>
+<li>long skip(long n)：忽略n个字符</li>
+<li>boolean ready()：是否可以读</li>
+<li>void close()：关闭流</li>
+</ul>
+<h3 id="InputStreamReader"><a href="#InputStreamReader" class="headerlink" title="InputStreamReader"></a>InputStreamReader</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170313010.png" alt="20170313010"></p>
+<h2 id="Writer"><a href="#Writer" class="headerlink" title="Writer"></a>Writer</h2><p><img src="http://om9xacvdp.bkt.clouddn.com/20170313011.png" alt="20170313011"></p>
+<ul>
+<li>write和append的作用是一样的，不过append()返回的是Writer本身，可以写链式编程</li>
+</ul>
+<h3 id="OutputStreamWriter"><a href="#OutputStreamWriter" class="headerlink" title="OutputStreamWriter"></a>OutputStreamWriter</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170313012.png" alt="20170313012"></p>
+<h2 id="如何选择IO流"><a href="#如何选择IO流" class="headerlink" title="如何选择IO流"></a>如何选择IO流</h2><ol>
+<li>确定是输入还是输出<br> 输入:输入流 InputStream Reader<br> 输出:输出流 OutputStream Writer</li>
+<li>明确操作的数据对象是否是纯文本<br> 是:字符流 Reader，Writer<br> 否:字节流 InputStream，OutputStream</li>
+<li>明确具体的设备。<ul>
+<li>文件：<br>  读：FileInputStream,, FileReader,<br>  写：FileOutputStream，FileWriter</li>
+<li>数组：<br>  byte[ ]：ByteArrayInputStream, ByteArrayOutputStream<br>  char[ ]：CharArrayReader, CharArrayWriter</li>
+<li>String：<br>  StringBufferInputStream(已过时，因为其只能用于String的每个字符都是8位的字符串), StringReader, StringWriter</li>
+<li>Socket流<br>  键盘：用System.in（是一个InputStream对象）读取，用System.out（是一个OutoutStream对象）打印</li>
+</ul>
+</li>
+<li>是否需要转换流<br> 是，就使用转换流，从Stream转化为Reader、Writer：InputStreamReader，OutputStreamWriter</li>
+<li>是否需要缓冲提高效率<br> 是就加上Buffered：BufferedInputStream, BufferedOuputStream, BufferedReader, BufferedWriter</li>
+<li>是否需要格式化输出</li>
+</ol>
+<h2 id="一些案例"><a href="#一些案例" class="headerlink" title="一些案例"></a>一些案例</h2><h3 id="删除非空文件夹"><a href="#删除非空文件夹" class="headerlink" title="删除非空文件夹"></a>删除非空文件夹</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">deleteDir</span><span class="params">(File dir)</span></span>&#123;                  </div><div class="line">	<span class="keyword">if</span>(dir.isDirectory())&#123;                                   </div><div class="line">		String[] childrenFiles=dir.list();                   </div><div class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;childrenFiles.length;i++)&#123;             </div><div class="line">			File childFile =<span class="keyword">new</span> File(dir,childrenFiles[i]);  </div><div class="line">			<span class="keyword">boolean</span> success = deleteDir(childFile);          </div><div class="line">			<span class="keyword">if</span>(!success)&#123;                                    </div><div class="line">				<span class="keyword">return</span> <span class="keyword">false</span>;                                </div><div class="line">			&#125;                                                </div><div class="line">		&#125;                                                    </div><div class="line">	&#125;                                                        </div><div class="line">	<span class="keyword">return</span> dir.delete();                                     </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Main</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;                        </div><div class="line">	File folder =<span class="keyword">new</span> File(<span class="string">"D:\\CodeLocation\\GitLocation"</span>);     </div><div class="line">	System.out.println(folder.isDirectory());                   </div><div class="line">	<span class="keyword">boolean</span> result = deleteDir(folder);                         </div><div class="line">	System.out.println(result);                                 </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="InputStream和OutputStream"><a href="#InputStream和OutputStream" class="headerlink" title="InputStream和OutputStream"></a>InputStream和OutputStream</h3><blockquote>
+<p>InputStream</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//从File中获取输入流，也可以直接使用InputStream is = new FileInputStream("src/main/java/love.txt")                                             </span></div><div class="line">File file = <span class="keyword">new</span> File(<span class="string">"src/main/java/love.txt"</span>);                         </div><div class="line">InputStream is = <span class="keyword">new</span> FileInputStream(file);               </div><div class="line">                                                          </div><div class="line"><span class="comment">//将输入流一次性全部写进缓冲区                                          </span></div><div class="line"><span class="keyword">byte</span>[] buffer=<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];                             </div><div class="line"><span class="keyword">int</span> len = is.read(buffer);                                </div><div class="line">                                                          </div><div class="line"><span class="comment">//将byte数组转换成字符串                                           </span></div><div class="line">String inputString = <span class="keyword">new</span> String(buffer,<span class="number">0</span>,len,<span class="string">"utf-8"</span>);    </div><div class="line">System.out.println(inputString); </div><div class="line"></div><div class="line">is.close();</div></pre></td></tr></table></figure>
+<blockquote>
+<p>OutputStream</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//在项目的根目录下有个文件叫love.txt，                                           </span></div><div class="line"><span class="comment">//也可以直接使用OutputStream os=new FileOutputStream("src/main/java/love2.txt");        </span></div><div class="line">File file = <span class="keyword">new</span> File(<span class="string">"src/main/java/love2.txt"</span>);                                 </div><div class="line">OutputStream os=<span class="keyword">new</span> FileOutputStream(file);                        </div><div class="line">                                                                   </div><div class="line"><span class="comment">//将文本转换成byte数组                                                     </span></div><div class="line">String outString =<span class="string">"我爱你"</span>;                                           </div><div class="line"><span class="keyword">byte</span>[] buffer =outString.getBytes(<span class="string">"utf-8"</span>);                        </div><div class="line">                                                                   </div><div class="line"><span class="comment">//往输出流中写入byte数组                                                    </span></div><div class="line">os.write(buffer);                                                  </div><div class="line">os.close();</div></pre></td></tr></table></figure>
+<h3 id="FileReader和FileWriter"><a href="#FileReader和FileWriter" class="headerlink" title="FileReader和FileWriter"></a>FileReader和FileWriter</h3><blockquote>
+<p>FileReader</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//从File中获取输入流                                         </span></div><div class="line">File file = <span class="keyword">new</span> File(<span class="string">"src/main/java/love.txt"</span>);       </div><div class="line">Reader reader = <span class="keyword">new</span> FileReader(file);                 </div><div class="line">                                                      </div><div class="line"><span class="comment">//将输入流一次性写进缓冲区                                        </span></div><div class="line"><span class="keyword">char</span>[] chars =<span class="keyword">new</span> <span class="keyword">char</span>[<span class="number">100</span>];                          </div><div class="line"><span class="keyword">int</span> len = reader.read(chars);                         </div><div class="line">                                                      </div><div class="line"><span class="comment">//将字符数组转换成字符串                                         </span></div><div class="line">String inputString =<span class="keyword">new</span> String(chars, <span class="number">0</span>, len);        </div><div class="line">System.out.println(inputString);    </div><div class="line"></div><div class="line">reader.close();</div></pre></td></tr></table></figure>
+<blockquote>
+<p>FileWriter</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//从file中获取输出流,第二个参数表示是否追加                             </span></div><div class="line">File file = <span class="keyword">new</span> File(<span class="string">"src/main/java/love3.txt"</span>);      </div><div class="line">Writer writer =<span class="keyword">new</span> FileWriter(file,<span class="keyword">true</span>);             </div><div class="line">                                                      </div><div class="line"><span class="comment">//将对象写入缓存区                                            </span></div><div class="line">String outString = <span class="string">"我爱你"</span>;                             </div><div class="line">writer.write(outString);                              </div><div class="line">                                                      </div><div class="line"><span class="comment">//刷新，将字符写进目的地                                         </span></div><div class="line">writer.flush();                                       </div><div class="line">                                                      </div><div class="line">writer.close();</div></pre></td></tr></table></figure>
+<h3 id="BufferedReader和BufferedWriter"><a href="#BufferedReader和BufferedWriter" class="headerlink" title="BufferedReader和BufferedWriter"></a>BufferedReader和BufferedWriter</h3><blockquote>
+<p>BufferedReader</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//创建文件的输入流                                             </span></div><div class="line">File file = <span class="keyword">new</span> File(<span class="string">"src/main/java/love.txt"</span>);        </div><div class="line">InputStream is = <span class="keyword">new</span> FileInputStream(file);            </div><div class="line">                                                       </div><div class="line"><span class="comment">//创建输入流的Reader                                         </span></div><div class="line">InputStreamReader isr = <span class="keyword">new</span> InputStreamReader(is);     </div><div class="line">BufferedReader br = <span class="keyword">new</span> BufferedReader(isr);           </div><div class="line">		                                               </div><div class="line">String line;                                           </div><div class="line"><span class="keyword">while</span>((line=br.readLine())!=<span class="keyword">null</span>)&#123;                     </div><div class="line">	System.out.println(line);                          </div><div class="line">&#125;                                                      </div><div class="line">                                                       </div><div class="line">br.close();                                            </div><div class="line">isr.close();                                           </div><div class="line">is.close();</div></pre></td></tr></table></figure>
+<blockquote>
+<p>BufferedWriter</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//创建文件的输出流                                                  </span></div><div class="line">File file = <span class="keyword">new</span> File(<span class="string">"src/main/java/love4.txt"</span>);            </div><div class="line">OutputStream os=<span class="keyword">new</span> FileOutputStream(file);                 </div><div class="line">                                                            </div><div class="line"><span class="comment">//创建输出流的Reader                                              </span></div><div class="line">OutputStreamWriter osw=<span class="keyword">new</span> OutputStreamWriter(os,<span class="string">"utf-8"</span>);  </div><div class="line">BufferedWriter bw=<span class="keyword">new</span> BufferedWriter(osw);                  </div><div class="line">                                                            </div><div class="line"><span class="comment">//向Reader中写数据                                               </span></div><div class="line">bw.write(<span class="string">"我爱Python"</span>+<span class="string">"\n"</span>);                                  </div><div class="line">bw.write(<span class="string">"我爱.Net"</span>);                                         </div><div class="line">                                                            </div><div class="line">bw.close();                                                 </div><div class="line">osw.close();                                                </div><div class="line">os.close();</div></pre></td></tr></table></figure>
+<h3 id="ByteArrayInputStream和ByteArrayOutputStream"><a href="#ByteArrayInputStream和ByteArrayOutputStream" class="headerlink" title="ByteArrayInputStream和ByteArrayOutputStream"></a>ByteArrayInputStream和ByteArrayOutputStream</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">URL url=<span class="keyword">new</span> URL(<span class="string">"http://kimisme.com"</span>);                    </div><div class="line">InputStream is = url.openStream();                        </div><div class="line">ByteArrayOutputStream baos=<span class="keyword">new</span> ByteArrayOutputStream();   </div><div class="line"><span class="keyword">int</span> c= is.read();                                         </div><div class="line"><span class="keyword">while</span>(c!=-<span class="number">1</span>)&#123;                                             </div><div class="line">	baos.write(c);                                        </div><div class="line">	c=is.read();                                          </div><div class="line">&#125;                                                         </div><div class="line">                                                          </div><div class="line">is.close();                                               </div><div class="line"><span class="keyword">byte</span>[] arr = baos.toByteArray();                          </div><div class="line">String outputString = <span class="keyword">new</span> String(arr);                    </div><div class="line">System.out.println(outputString);</div></pre></td></tr></table></figure>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://linbingdong.com/2017/01/11/Java%20I:O%E6%80%BB%E7%BB%93/" target="_blank" rel="external">http://linbingdong.com/2017/01/11/Java%20I:O%E6%80%BB%E7%BB%93/</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/11/cheat-sheet-mysql/" rel="next" title="mysql 备忘录">
+                <i class="fa fa-chevron-left"></i> mysql 备忘录
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/14/learn-jvm-bytecode-variate/" rel="prev" title="JVM初探-常量">
+                JVM初探-常量 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么需要IO操作"><span class="nav-number">2.</span> <span class="nav-text">为什么需要IO操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IO体系架构"><span class="nav-number">3.</span> <span class="nav-text">IO体系架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#IO派系"><span class="nav-number">4.</span> <span class="nav-text">IO派系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#InputStream"><span class="nav-number">5.</span> <span class="nav-text">InputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FileInputStream"><span class="nav-number">5.1.</span> <span class="nav-text">FileInputStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ByteArrayInputStream"><span class="nav-number">5.2.</span> <span class="nav-text">ByteArrayInputStream</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#OutputStream"><span class="nav-number">6.</span> <span class="nav-text">OutputStream</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FileOutputStream"><span class="nav-number">6.1.</span> <span class="nav-text">FileOutputStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ByteArrayOutputStream"><span class="nav-number">6.2.</span> <span class="nav-text">ByteArrayOutputStream</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reader"><span class="nav-number">7.</span> <span class="nav-text">Reader</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#InputStreamReader"><span class="nav-number">7.1.</span> <span class="nav-text">InputStreamReader</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Writer"><span class="nav-number">8.</span> <span class="nav-text">Writer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#OutputStreamWriter"><span class="nav-number">8.1.</span> <span class="nav-text">OutputStreamWriter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何选择IO流"><span class="nav-number">9.</span> <span class="nav-text">如何选择IO流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些案例"><span class="nav-number">10.</span> <span class="nav-text">一些案例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#删除非空文件夹"><span class="nav-number">10.1.</span> <span class="nav-text">删除非空文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#InputStream和OutputStream"><span class="nav-number">10.2.</span> <span class="nav-text">InputStream和OutputStream</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FileReader和FileWriter"><span class="nav-number">10.3.</span> <span class="nav-text">FileReader和FileWriter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BufferedReader和BufferedWriter"><span class="nav-number">10.4.</span> <span class="nav-text">BufferedReader和BufferedWriter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ByteArrayInputStream和ByteArrayOutputStream"><span class="nav-number">10.5.</span> <span class="nav-text">ByteArrayInputStream和ByteArrayOutputStream</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">11.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

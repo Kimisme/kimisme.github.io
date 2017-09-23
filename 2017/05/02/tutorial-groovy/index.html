@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言因为最近在学习Gradle，涉及到一些Groovy语法，然后就花了一些时间入了门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Groovy学习笔记">
+<meta property="og:url" content="http://kimisme.com/2017/05/02/tutorial-groovy/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言因为最近在学习Gradle，涉及到一些Groovy语法，然后就花了一些时间入了门">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-05-13T14:44:39.633Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Groovy学习笔记">
+<meta name="twitter:description" content="前言因为最近在学习Gradle，涉及到一些Groovy语法，然后就花了一些时间入了门">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/05/02/tutorial-groovy/"/>
+
+
+
+
+
+  <title>Groovy学习笔记 | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/05/02/tutorial-groovy/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Groovy学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-02T10:12:42+08:00">
+                2017-05-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>因为最近在学习Gradle，涉及到一些Groovy语法，然后就花了一些时间入了门</p>
+<a id="more"></a>
+<h2 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h2><p>Groovy是Java平台上设计的面向对象编程语言。这门动态语言拥有类似Python、Ruby和Smalltalk中的一些特性，可以作为Java平台的脚本语言使用。<br>Groovy的语法与Java非常相似，以至于多数的Java代码也是正确的Groovy代码。Groovy代码动态地被编译器转换成Java字节码。由于其运行在JVM上的特性，Groovy可以使用其他Java语言编写的库。</p>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p><strong>官方地址</strong>：<a href="http://www.groovy-lang.org/" target="_blank" rel="external">http://www.groovy-lang.org/</a></p>
+<p><strong>Eclipse插件地址</strong>：<a href="https://github.com/groovy/groovy-eclipse/wiki" target="_blank" rel="external">https://github.com/groovy/groovy-eclipse/wiki</a></p>
+<p><strong>开发过程</strong>：用Eclipse新建一个Groovy项目；新建一个Groovy Class；右击run as groovy script</p>
+<h2 id="入门例子"><a href="#入门例子" class="headerlink" title="入门例子"></a>入门例子</h2><blockquote>
+<p>Main.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def args)</span></span>&#123;</div><div class="line">		println(<span class="string">"Hello Groovy"</span>)</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Analyze</p>
+</blockquote>
+<ul>
+<li>Groovy是动态语言，def表示变量的声明类型，再赋值时编译器自动识别类型</li>
+<li>Groovy中默认的修饰符就是public</li>
+<li>Groovy中语句后面是不需要加分号结束的</li>
+</ul>
+<h3 id="字符串连接"><a href="#字符串连接" class="headerlink" title="字符串连接"></a>字符串连接</h3><p>方式一：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def s1 = <span class="string">"hello "</span>+   </div><div class="line"><span class="string">"Groovy"</span>             </div><div class="line">println(s1)</div></pre></td></tr></table></figure>
+<p>方式二(回车和tab会被保留下来)：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">def s2 = <span class="string">""</span><span class="string">"Hello </span></div><div class="line"><span class="string">Groovy"</span><span class="string">""</span>         </div><div class="line">println(s2)</div></pre></td></tr></table></figure>
+<h3 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h3><p><strong>方式一</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(def i = <span class="number">0</span>;i&lt; <span class="number">5</span> ;i++)&#123;  </div><div class="line">	println(<span class="string">"Hello Groovy"</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>方式二</strong>:</p>
+<p>输出0,1,2,3,4,5</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(i in <span class="number">0</span>..<span class="number">5</span>)&#123; </div><div class="line">	println(i)  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>分析：</p>
+<p><strong>0..5</strong>表示包含整数0,1,2,3,4,5<br><strong>0..&lt;5</strong>表示包含整数0,1,2,3,4</p>
+<p><strong>方式三</strong>:</p>
+<p>Gstring字符串类型，用”号括住</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span>(i in <span class="number">0</span>..<span class="number">5</span>)&#123;                    </div><div class="line">	println <span class="string">"This is $&#123;i&#125;"</span>        </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="默认值"><a href="#默认值" class="headerlink" title="默认值"></a>默认值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> def <span class="title">repeat</span><span class="params">(val,count=<span class="number">3</span>)</span></span>&#123;       </div><div class="line">	<span class="keyword">for</span>(i in <span class="number">0</span>..&lt;count)&#123;              </div><div class="line">		println <span class="string">"This is $&#123;i&#125;:$&#123;val&#125;"</span> </div><div class="line">	&#125;                                 </div><div class="line">&#125;                                     </div><div class="line">                                      </div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;            </div><div class="line">	repeat(<span class="string">"Hello Groovy"</span>)            </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><h4 id="List"><a href="#List" class="headerlink" title="List"></a>List</h4><p><strong>集合中加元素</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">def collect=[<span class="string">"a"</span>,<span class="string">"b"</span>,<span class="string">"c"</span>]      </div><div class="line">collect.add(<span class="number">1</span>)                 </div><div class="line">collect&lt;&lt;<span class="string">"d"</span>                   </div><div class="line">collect[collect.size()]=<span class="string">"f"</span>    </div><div class="line">collect=collect+<span class="string">"g"</span><span class="comment">//在集合中添加元素g </span></div><div class="line">collect=collect-<span class="string">"f"</span><span class="comment">//在集合中删除元素f </span></div><div class="line">collect=collect-collect[<span class="number">0</span>..<span class="number">1</span>]<span class="comment">//删除集合中前2个元素</span></div></pre></td></tr></table></figure>
+<p><strong>集合中元素的访问</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">println(collect)                </div><div class="line">println(collect[<span class="number">0</span>])             </div><div class="line">println(collect[-<span class="number">1</span>])<span class="comment">//倒数第一个元素f</span></div></pre></td></tr></table></figure>
+<h4 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def map=[<span class="string">"name"</span>:<span class="string">"jack"</span>,<span class="string">"age"</span>:<span class="number">18</span>] </div><div class="line">                                 </div><div class="line">                                 </div><div class="line">map=map+[<span class="string">"sex"</span>:<span class="string">"male"</span>]           </div><div class="line">map.put(<span class="string">"hobby"</span>,<span class="string">"chess"</span>)         </div><div class="line">map.hair=<span class="string">"black"</span>                 </div><div class="line">                                 </div><div class="line">println(map)                     </div><div class="line">println(map[<span class="string">"name"</span>])</div></pre></td></tr></table></figure>
+<h3 id="集合的遍历"><a href="#集合的遍历" class="headerlink" title="集合的遍历"></a>集合的遍历</h3><p><strong>方式一</strong></p>
+<ul>
+<li>key,value两个参数用于接受每个元素的键，值</li>
+<li>闭包也是对象，可以作为一个参数传递给each()方法</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def map=[<span class="string">"name"</span>:<span class="string">"jack"</span>,<span class="string">"age"</span>:<span class="number">18</span>,<span class="string">"sex"</span>:<span class="string">"male"</span>]</div><div class="line">                                             </div><div class="line">map.each(&#123;                                   </div><div class="line">	key,value-&gt;println <span class="string">"$key:$value"</span>         </div><div class="line">	&#125;)</div></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">name:jack</div><div class="line">age:<span class="number">18</span></div><div class="line">sex:male</div></pre></td></tr></table></figure>
+<p><strong>方式二</strong></p>
+<ul>
+<li>it是一个关键字，代表map集合的每一个元素</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">map.each&#123;       </div><div class="line">	println it  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">name=jack</div><div class="line">age=<span class="number">18</span></div><div class="line">sex=male</div></pre></td></tr></table></figure>
+<p><strong>方式三</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">map.each(&#123;                                 </div><div class="line">	println it.getKey()+<span class="string">"--&gt;"</span>+it.getValue()</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>输出</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">name--&gt;jack</div><div class="line">age--&gt;<span class="number">18</span></div><div class="line">sex--&gt;male</div></pre></td></tr></table></figure>
+<h2 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h2><h3 id="定义和执行闭包"><a href="#定义和执行闭包" class="headerlink" title="定义和执行闭包"></a>定义和执行闭包</h3><blockquote>
+<p>Main.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def one=&#123;                                  </div><div class="line">	num1,num2-&gt;println <span class="string">"param is : $num1 &amp; </span></div><div class="line"><span class="string">&#125;                                          </span></div><div class="line"><span class="string">                                           </span></div><div class="line"><span class="string">one(2,3)	//输出param is 2 &amp; 3             </span></div><div class="line"><span class="string">one 2,3		//省略()的等效写法                    </span></div><div class="line"><span class="string">                                           </span></div><div class="line"><span class="string">one.call(2,3)//使用call()方法                  </span></div><div class="line"><span class="string">one.call 2,3 //省略()等效写法</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>Analyze</p>
+</blockquote>
+<ul>
+<li>闭包自身的定义写法。在参数与具体代码执行端间的分隔符是-&gt;，老版本的是|</li>
+<li>使用call方法，或简便写法</li>
+<li>由于groovy可以省略()，而引发的众多等效写法</li>
+<li>单</li>
+</ul>
+<h3 id="闭包作为参数返回"><a href="#闭包作为参数返回" class="headerlink" title="闭包作为参数返回"></a>闭包作为参数返回</h3><blockquote>
+<p>Main.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> def <span class="title">makeClosure</span><span class="params">(name)</span></span>&#123;  </div><div class="line">	<span class="keyword">return</span>&#123;                    </div><div class="line">		println <span class="string">"Hello $&#123;name&#125;"</span></div><div class="line">	&#125;                          </div><div class="line">&#125;                              </div><div class="line">                               </div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;     </div><div class="line">	                           </div><div class="line">	makeClosure(<span class="string">"World"</span>)() <span class="comment">//Hello World    </span></div><div class="line">	                           </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Analyze</p>
+</blockquote>
+<p><code>makeClosure()</code>方法返回的是一个闭包对象，而闭包可以理解为一个匿名函数。<br>当调用<code>makeClosure(&quot;World&quot;)()</code>时，其实就是执行闭包内的代码</p>
+<h3 id="闭包作为参数传递"><a href="#闭包作为参数传递" class="headerlink" title="闭包作为参数传递"></a>闭包作为参数传递</h3><blockquote>
+<p>Main.groovy</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> def <span class="title">run</span><span class="params">(a)</span></span>&#123;            </div><div class="line">	a.call()                  </div><div class="line">&#125;                                   </div><div class="line">                                    </div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;          </div><div class="line">	                                </div><div class="line">	def one=&#123;println <span class="string">"Hello World"</span>&#125; </div><div class="line">	                                </div><div class="line">	run(one)	                    </div><div class="line">	                                </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Analyze</p>
+</blockquote>
+<p>Groovy执行方法的方式有两种：方式一：<code>a.call()</code>；方式二：<code>a()</code></p>
+<h3 id="闭包使用外部变量"><a href="#闭包使用外部变量" class="headerlink" title="闭包使用外部变量"></a>闭包使用外部变量</h3><h3 id="使用闭包实现单方法接口"><a href="#使用闭包实现单方法接口" class="headerlink" title="使用闭包实现单方法接口"></a>使用闭包实现单方法接口</h3><blockquote>
+<p>IFly.groovy</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IFly</span> </span>&#123;</div><div class="line">	<span class="function">def <span class="title">one</span><span class="params">()</span></span></div><div class="line"><span class="function">&#125;</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>Main.groovy</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;              </div><div class="line">	                                    </div><div class="line">	def fly=&#123;println <span class="string">"fly fly"</span>&#125; as IFly </div><div class="line">	fly.one()                           </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Analyze</p>
+</blockquote>
+<ul>
+<li>使用关键字as</li>
+</ul>
+<h3 id="使用闭包实现多方法接口"><a href="#使用闭包实现多方法接口" class="headerlink" title="使用闭包实现多方法接口"></a>使用闭包实现多方法接口</h3><blockquote>
+<p>IFly.groovy</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IFly</span> </span>&#123;</div><div class="line">	<span class="function">def <span class="title">one</span><span class="params">()</span></span></div><div class="line"><span class="function">	def <span class="title">two</span><span class="params">()</span></span></div><div class="line"><span class="function">&#125;</span></div></pre></td></tr></table></figure>
+<blockquote>
+<p>Main.groovy</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;  </div><div class="line">	                        </div><div class="line">	def fly=[               </div><div class="line">		one:&#123;println <span class="string">"one"</span>&#125;,</div><div class="line">		two:&#123;println <span class="string">"two"</span>&#125; </div><div class="line">		] as IFly           </div><div class="line">		                    </div><div class="line">	fly.one()               </div><div class="line">	fly.two()               </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Analyze</p>
+</blockquote>
+<ul>
+<li>使用关键字as</li>
+<li>使用Map。key为方法名，value为闭包</li>
+</ul>
+<ul>
+<li>闭包是用<code>{</code>符号括起来的代码块，它可以被单独运行或调用，也可以被命名。类似<code>匿名类</code>或<code>内联函数</code>的概念</li>
+<li>闭包中最常见的应用是对集合进行迭代</li>
+</ul>
+<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p><strong>不需要public修饰符</strong>：groovy的默认修饰符就是public<br><strong>不需要类型说明</strong>：groovy不关心变量和方法参数的具体类型<br><strong>不需要getter/setter方法</strong>：底层默认实现了这些方法<br><strong>不需要构造函数</strong>：groovy提供了两个构造函数：不带参数的默认构造函数，只带一个map参数的构造函数。<br><strong>不需要return</strong>：看下面例子<br><strong>不需要()号</strong>：方法调用可以省略()</p>
+<blockquote>
+<p>Person.groovy</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</div><div class="line">	def name</div><div class="line">	def age</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</div><div class="line">		<span class="string">"$name:$age"</span></div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Main.groovy</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;</div><div class="line">		def map=[<span class="string">"name"</span>:<span class="string">"jack"</span>,<span class="string">"age"</span>:<span class="number">18</span>]</div><div class="line">		def person = <span class="keyword">new</span> Person(map);</div><div class="line">		def person2 =<span class="keyword">new</span> Person(<span class="string">"name"</span>:<span class="string">"jack"</span>,<span class="string">"age"</span>:<span class="number">18</span>)</div><div class="line">		</div><div class="line">		println(person)</div><div class="line">		println person2</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Output</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">jack:<span class="number">18</span></div><div class="line">jack:<span class="number">18</span></div></pre></td></tr></table></figure>
+<h2 id="运算符"><a href="#运算符" class="headerlink" title="?运算符"></a>?运算符</h2><blockquote>
+<p>Main.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def map=[<span class="string">"name"</span>:<span class="string">"jack"</span>,<span class="string">"age"</span>:<span class="number">18</span>]      </div><div class="line">println(map)                          </div><div class="line">                                      </div><div class="line">map=<span class="keyword">null</span>                              </div><div class="line">println map?.size()</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Output</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">null</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Analyze</p>
+</blockquote>
+<p>?在这里是一个条件运算符，如果?前面的对象非null，执行后面的方法，否则什么也不做，即println map</p>
+<h2 id="可变参数"><a href="#可变参数" class="headerlink" title="可变参数"></a>可变参数</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">sum</span><span class="params">(<span class="keyword">int</span>...var)</span></span>&#123;</div><div class="line">		def total=<span class="number">0</span></div><div class="line">		<span class="keyword">for</span>(i in var)&#123;</div><div class="line">			total += i</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> total</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;</div><div class="line">		<span class="function">println <span class="title">sum</span><span class="params">(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span></span></div><div class="line"><span class="function">	&#125;</span></div><div class="line"><span class="function">&#125;</span></div></pre></td></tr></table></figure>
+<h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><blockquote>
+<p>Day.java</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Day &#123;</div><div class="line">	MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,</div><div class="line">	SATURDAY,SUNDAY</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>Main.groovy</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;                               </div><div class="line">	                                                     </div><div class="line">	def today = Day.WEDNESDAY                            </div><div class="line">	<span class="keyword">switch</span>(today)&#123;                                       </div><div class="line">		<span class="keyword">case</span> [Day.SATURDAY, Day.SUNDAY]:                 </div><div class="line">			println <span class="string">"Weekends are cool"</span>                  </div><div class="line">			<span class="keyword">break</span>                                        </div><div class="line">		<span class="keyword">case</span> Day.MONDAY..Day.FRIDAY:                     </div><div class="line">			println <span class="string">"Boring work day"</span>                    </div><div class="line">			<span class="keyword">break</span>                                        </div><div class="line">		<span class="keyword">default</span>:                                         </div><div class="line">			println <span class="string">"Are you sure this is a valid day?"</span>  </div><div class="line">	&#125;                                                    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>同Java，枚举也可以带参数</p>
+<h2 id="三目运算符"><a href="#三目运算符" class="headerlink" title="三目运算符"></a>三目运算符</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">def name = <span class="keyword">null</span>                  </div><div class="line">println name!=<span class="keyword">null</span>?name:<span class="string">"UnKnown"</span></div></pre></td></tr></table></figure>
+<p>因为null在groovy中可以转换为布尔值false，可以简化为</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">println name?name:<span class="string">"UnKnown"</span></div></pre></td></tr></table></figure>
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(def arg)</span></span>&#123;</div><div class="line">	def msg =<span class="string">"Hello"</span></div><div class="line">	println msg.metaClass </div><div class="line">	</div><div class="line">	String.metaClass.up=&#123;delegate.toUpperCase()&#125;</div><div class="line">	println msg.up()</div><div class="line">	</div><div class="line">	msg.metaClass.methods.each&#123;println <span class="string">"method:"</span>+it.name&#125;</div><div class="line">	msg.metaClass.properties.each&#123;println <span class="string">"property:"</span>+it.name&#125;</div><div class="line">	</div><div class="line">	<span class="keyword">if</span>(msg.metaClass.respondsTo(msg,<span class="string">"up"</span>))&#123;</div><div class="line">		println msg.up()</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	println msg.metaClass.hasProperty(msg,<span class="string">"bytes"</span>)</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/01/gradle-grammar/" rel="next" title="gradle-grammar">
+                <i class="fa fa-chevron-left"></i> gradle-grammar
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/03/tutorial-linq/" rel="prev" title="tutorial-linq">
+                tutorial-linq <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#是什么"><span class="nav-number">2.</span> <span class="nav-text">是什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发环境"><span class="nav-number">3.</span> <span class="nav-text">开发环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#入门例子"><span class="nav-number">4.</span> <span class="nav-text">入门例子</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串连接"><span class="nav-number">4.1.</span> <span class="nav-text">字符串连接</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#循环"><span class="nav-number">4.2.</span> <span class="nav-text">循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#默认值"><span class="nav-number">4.3.</span> <span class="nav-text">默认值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集合"><span class="nav-number">4.4.</span> <span class="nav-text">集合</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#List"><span class="nav-number">4.4.1.</span> <span class="nav-text">List</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Map"><span class="nav-number">4.4.2.</span> <span class="nav-text">Map</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#集合的遍历"><span class="nav-number">4.5.</span> <span class="nav-text">集合的遍历</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#闭包"><span class="nav-number">5.</span> <span class="nav-text">闭包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#定义和执行闭包"><span class="nav-number">5.1.</span> <span class="nav-text">定义和执行闭包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#闭包作为参数返回"><span class="nav-number">5.2.</span> <span class="nav-text">闭包作为参数返回</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#闭包作为参数传递"><span class="nav-number">5.3.</span> <span class="nav-text">闭包作为参数传递</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#闭包使用外部变量"><span class="nav-number">5.4.</span> <span class="nav-text">闭包使用外部变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用闭包实现单方法接口"><span class="nav-number">5.5.</span> <span class="nav-text">使用闭包实现单方法接口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用闭包实现多方法接口"><span class="nav-number">5.6.</span> <span class="nav-text">使用闭包实现多方法接口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类"><span class="nav-number">6.</span> <span class="nav-text">类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运算符"><span class="nav-number">7.</span> <span class="nav-text">?运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可变参数"><span class="nav-number">8.</span> <span class="nav-text">可变参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#枚举"><span class="nav-number">9.</span> <span class="nav-text">枚举</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三目运算符"><span class="nav-number">10.</span> <span class="nav-text">三目运算符</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反射"><span class="nav-number">11.</span> <span class="nav-text">反射</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

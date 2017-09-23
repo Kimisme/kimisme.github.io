@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Think Different" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前言本文主要介绍下Java的类加载机制">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java基础-类加载机制">
+<meta property="og:url" content="http://kimisme.com/2017/05/12/java-basic-classloader/index.html">
+<meta property="og:site_name" content="Think Different">
+<meta property="og:description" content="前言本文主要介绍下Java的类加载机制">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-05-13T14:50:10.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java基础-类加载机制">
+<meta name="twitter:description" content="前言本文主要介绍下Java的类加载机制">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kimisme.com/2017/05/12/java-basic-classloader/"/>
+
+
+
+
+
+  <title>Java基础-类加载机制 | Think Different</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Think Different</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kimisme.com/2017/05/12/java-basic-classloader/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kimisme">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Think Different">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java基础-类加载机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-12T20:05:07+08:00">
+                2017-05-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java-Basic/" itemprop="url" rel="index">
+                    <span itemprop="name">Java-Basic</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本文主要介绍下Java的类加载机制</p>
+<a id="more"></a>
+<h2 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h2><blockquote>
+<p>什么是ClassLoader</p>
+</blockquote>
+<p>ClassLoader是JVM的一个重要组成部分。Class文件由类装载器装载后，在JVM中将形成一份描述Class结构的元信息对象，通过该元信息对象可以获知Class的结构信息：如构造函数，属性和方法等，Java允许用户借由这个Class相关的元信息对象间接调用Class对象的功能。</p>
+<blockquote>
+<p>什么是JVM的类加载机制</p>
+</blockquote>
+<p>ClassLoader把class文件加载到内存，并对数据进行校验，转换解析和初始化，最终形成可以被JVM直接使用的Java类型，这个过程就叫做JVM的类加载机制。</p>
+<blockquote>
+<p>类加载机制的工作机制</p>
+</blockquote>
+<p>类加载器就是寻找类的字节码文件，并构造出类在JVM内部表示的对象组件。<br>在Java中，类加载器把一个类装入JVM中，要经过以下步骤：</p>
+<ol>
+<li>转载：查找和导入Class文件</li>
+<li>链接：把类的二进制数据合并到JRE中<ul>
+<li>校验：检查载入Class文件数据的正确性</li>
+<li>准备：给类的静态变量分配存储空间</li>
+<li>解析：将符号引用转成直接引用</li>
+</ul>
+</li>
+<li>初始化：对类的静态变量，静态代码块执行初始化操作  </li>
+</ol>
+<blockquote>
+<p>Java程序能不能进行动态扩展</p>
+</blockquote>
+<p>Java程序可以动态扩展是由运行期动态加载和动态链接实现的；比如：如果编写一个使用接口的应用程序，可以等到运行时再指定其实际的实现(多态)，解析过程有时候还可以在初始化之后执行；比如：动态绑定(多态)；</p>
+<h2 id="工作机制"><a href="#工作机制" class="headerlink" title="工作机制"></a>工作机制</h2><h3 id="类初始化"><a href="#类初始化" class="headerlink" title="类初始化"></a>类初始化</h3><p>只有以下四种情况会触发初始化，也称为对一个类进行主动引用，除此以外，所有其他方式都不会触发初始化，称为被动引用</p>
+<ul>
+<li>遇到new、getstatic、putstatic或invokestatic这4条字节码指令时，如果类没有进行过初始化，则需要先触发其初始化。生成这4条指令的最常见的Java代码场景是：使用new关键字实例化对象的时候，读取或设置一个类的静态字段（被final修饰、已在编译期把结果放入常量池的静态字段除外）的时候，以及调用一个类的静态方法的时候。</li>
+<li>使用java.lang.reflect包的方法对类进行反射调用的时候，如果类没有进行过初始化，则需要先触发其初始化。</li>
+<li>当初始化一个类的时候，如果发现其父类还没有进行过初始化，则需要先触发其父类的初始化。</li>
+<li>当虚拟机启动时，用户需要指定一个要执行的主类（包含main()方法的那个类），虚拟机会先初始化这个主类。</li>
+</ul>
+<blockquote>
+<p>被动使用类字段Demo1</p>
+</blockquote>
+<ul>
+<li>通过子类引用父类的静态字段，不会触发子类的初始化</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SuperClass</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"SuperClass init"</span>);</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> value = <span class="number">123</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">SubClass</span> <span class="keyword">extends</span> <span class="title">SuperClass</span> </span>&#123;</div><div class="line">	<span class="keyword">static</span> &#123;</div><div class="line">		System.out.println(<span class="string">"SubClass init"</span>);</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">NotInitialization</span> </span>&#123;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">		System.out.println(SubClass.value);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="装载"><a href="#装载" class="headerlink" title="装载"></a>装载</h3><p>在装载阶段，虚拟机需要完成以下3件事情</p>
+<ol>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流</li>
+<li>将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构</li>
+<li>在Java堆中生成一个代表这个类的java.lang.Class对象，作为方法区这些数据的访问入口。</li>
+</ol>
+<p>虚拟机规范中并没有准确说明二进制字节流应该从哪里获取以及怎样获取,这里可以通过定义自己的类加载器去控制字节流的获取方式。</p>
+<h3 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h3><p>虚拟机如果不检查输入的字节流，对其完全信任的话，很可能会因为载入了有害的字节流而导致系统奔溃。</p>
+<h3 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h3><p>准备阶段是正式为类变量分配并设置类变量初始值的阶段，这些内存都将在方法区中进行分配,需要说明的是：</p>
+<p>这时候进行内存分配的仅包括类变量(被static修饰的变量),而不包括实例变量,实例变量将会在对象实例化时随着对象一起分配在Java堆中;这里所说的初始值“通常情况”是数据类型的零值，假如:</p>
+<p>public static int value = 123;</p>
+<p>value在准备阶段过后的初始值为0而不是123,而把value赋值的putstatic指令将在初始化阶段才会被执行</p>
+<h2 id="类加载器与双亲委派模型"><a href="#类加载器与双亲委派模型" class="headerlink" title="类加载器与双亲委派模型"></a>类加载器与双亲委派模型</h2><p><strong>类加载器</strong></p>
+<ul>
+<li>启动类加载器(Bootstrap ClassLoader)：将存放于<java_home>\lib目录中的，或者被-Xbootclasspath参数所指定的路径中的，并且是虚拟机识别的（仅按照文件名识别，如 rt.jar 名字不符合的类库即使放在lib目录中也不会被加载）类库加载到虚拟机内存中。启动类加载器无法被Java程序直接引用</java_home></li>
+<li>扩展类加载器(Extension ClassLoader)：将<java_home>\lib\ext目录下的，或者被java.ext.dirs系统变量所指定的路径中的所有类库加载。开发者可以直接使用扩展类加载器。</java_home></li>
+<li>应用类加载器(Application ClassLoader)：负责加载用户类路径(ClassPath)上所指定的类库,开发者可直接使用。</li>
+</ul>
+<p><strong>工作过程</strong></p>
+<p>如果一个类加载器接收到了类加载的请求，它首先把这个请求委托给他的父类加载器去完成，每个层次的类加载器都是如此，因此所有的加载请求都应该传送到顶层的启动类加载器中，只有当父加载器反馈自己无法完成这个加载请求（它在搜索范围中没有找到所需的类）时，子加载器才会尝试自己去加载。</p>
+<p><strong>双亲委派的好处</strong></p>
+<p>java类随着它的类加载器一起具备了一种带有优先级的层次关系。例如类java.lang.Object，它存放在rt.jar中，无论哪个类加载器要加载这个类，最终都会委派给启动类加载器进行加载，因此Object类在程序的各种类加载器环境中都是同一个类。相反，如果用户自己写了一个名为java.lang.Object的类，并放在程序的Classpath中，那系统中将会出现多个不同的Object类，java类型体系中最基础的行为也无法保证，应用程序也会变得一片混乱。</p>
+<p><strong>实现双亲委托的主要代码</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> Class&lt;?&gt; loadClass(String name, <span class="keyword">boolean</span> resolve)</div><div class="line">    <span class="keyword">throws</span> ClassNotFoundException</div><div class="line">&#123;</div><div class="line">    <span class="keyword">synchronized</span> (getClassLoadingLock(name)) &#123;</div><div class="line">        <span class="comment">// First, check if the class has already been loaded</span></div><div class="line">        Class c = findLoadedClass(name);</div><div class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">            <span class="keyword">long</span> t0 = System.nanoTime();</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                <span class="keyword">if</span> (parent != <span class="keyword">null</span>) &#123;</div><div class="line">                    c = parent.loadClass(name, <span class="keyword">false</span>);</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    c = findBootstrapClassOrNull(name);</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</div><div class="line">                <span class="comment">// ClassNotFoundException thrown if class not found</span></div><div class="line">                <span class="comment">// from the non-null parent class loader</span></div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</div><div class="line">                <span class="comment">// If still not found, then invoke findClass in order</span></div><div class="line">                <span class="comment">// to find the class.</span></div><div class="line">                <span class="keyword">long</span> t1 = System.nanoTime();</div><div class="line">                c = findClass(name);</div><div class="line"></div><div class="line">                <span class="comment">// this is the defining class loader; record the stats</span></div><div class="line">                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);</div><div class="line">                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);</div><div class="line">                sun.misc.PerfCounter.getFindClasses().increment();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">if</span> (resolve) &#123;</div><div class="line">            resolveClass(c);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> c;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h2><p>Reflection机制允许程序在正在执行的过程中，利用Reflection APIs取得任何已知名称的类的内部信息，包括：package、 type parameters、 superclass、 implemented interfaces、 inner classes、 outer classes、 fields、 constructors、 methods、 modifiers等，并可以在执行的过程中，动态生成instances、变更fields内容或唤起methods。</p>
+<h3 id="获取构造方法"><a href="#获取构造方法" class="headerlink" title="获取构造方法"></a>获取构造方法</h3><p>Class类提供了四个public方法，用于获取某个类的构造方法。</p>
+<ul>
+<li><code>Constructor getConstructor(Class[] params)</code>：根据构造函数的参数，返回一个具体的具有public属性的构造函数</li>
+<li><code>Constructor getConstructors()</code>：返回所有具有public属性的构造函数数组</li>
+<li><code>Constructor getDeclaredConstructor(Class[] params)</code>：根据构造函数的参数，返回一个具体的构造函数（不分public和非public属性）</li>
+<li><code>Constructor getDeclaredConstructors()</code>：返回该类中所有的构造函数数组（不分public和非public属性）</li>
+</ul>
+<h3 id="获取类的成员方法"><a href="#获取类的成员方法" class="headerlink" title="获取类的成员方法"></a>获取类的成员方法</h3><p>与获取构造方法的方式相同，存在四种获取成员方法的方式。　</p>
+<ul>
+<li><code>Method getMethod(String name, Class[] params)</code>：根据方法名和参数，返回一个具体的具有public属性的方法</li>
+<li><code>Method[] getMethods()</code>：返回所有具有public属性的方法数组</li>
+<li><code>Method getDeclaredMethod(String name, Class[] params)</code>：根据方法名和参数，返回一个具体的方法（不分public和非public属性）</li>
+<li><code>Method[] getDeclaredMethods()</code>：返回该类中的所有的方法数组（不分public和非public属性）</li>
+</ul>
+<h3 id="获取类的成员变量（成员属性）"><a href="#获取类的成员变量（成员属性）" class="headerlink" title="获取类的成员变量（成员属性）"></a>获取类的成员变量（成员属性）</h3><p>存在四种获取成员属性的方法</p>
+<ul>
+<li><code>Field getField(String name)</code>：根据变量名，返回一个具体的具有public属性的成员变量</li>
+<li><code>Field[] getFields()</code>：返回具有public属性的成员变量的数组</li>
+<li><code>Field getDeclaredField(String name)</code>：根据变量名，返回一个成员变量（不分public和非public属性）</li>
+<li><code>Field[] getDelcaredFields()</code>：返回所有成员变量组成的数组（不分public和非public属性）</li>
+</ul>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="http://www.cnblogs.com/ITtangtang/p/3978102.html" target="_blank" rel="external">http://www.cnblogs.com/ITtangtang/p/3978102.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/06/deal-git-file-lose/" rel="next" title="Git冲突导致文件丢失">
+                <i class="fa fa-chevron-left"></i> Git冲突导致文件丢失
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/12/java-basic-byte/" rel="prev" title="java-basic-byte">
+                java-basic-byte <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://om9xacvdp.bkt.clouddn.com/blog-self-logo.jpg"
+              alt="Kimisme" />
+          
+            <p class="site-author-name" itemprop="name">Kimisme</p>
+            <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">98</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/kimisme" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>GitHub</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://www.jianshu.com/u/d511eb68dcbe" target="_blank" title="简书">
+                  
+                    <i class="fa fa-fw fa-heartbeat"></i>简书</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器"><span class="nav-number">2.</span> <span class="nav-text">类加载器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工作机制"><span class="nav-number">3.</span> <span class="nav-text">工作机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类初始化"><span class="nav-number">3.1.</span> <span class="nav-text">类初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装载"><span class="nav-number">3.2.</span> <span class="nav-text">装载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证"><span class="nav-number">3.3.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#准备"><span class="nav-number">3.4.</span> <span class="nav-text">准备</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类加载器与双亲委派模型"><span class="nav-number">4.</span> <span class="nav-text">类加载器与双亲委派模型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#反射"><span class="nav-number">5.</span> <span class="nav-text">反射</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取构造方法"><span class="nav-number">5.1.</span> <span class="nav-text">获取构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取类的成员方法"><span class="nav-number">5.2.</span> <span class="nav-text">获取类的成员方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取类的成员变量（成员属性）"><span class="nav-number">5.3.</span> <span class="nav-text">获取类的成员变量（成员属性）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">6.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kimisme</span>
+
+  
+</div>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.2</div>
+
+  <div class="powered-by">
+    <i class="fa fa-user-md"></i>
+    <span id="busuanzi_container_site_pv">
+      本站总访问量<span id="busuanzi_value_site_pv"></span>次
+    </span>
+  </div>
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
