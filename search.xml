@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Gradle系列(3)-Groovy特性]]></title>
+    <url>%2F2017%2F09%2F24%2Fgradle-groovy-grammar%2F</url>
+    <content type="text"><![CDATA[前言Groovy特性 Groovy是什么Groovy是用于Java虚拟机的一种敏捷的动态语言，它是一种成熟的面向对象编程语言，既可以用于面向对象编程，又可以用作纯粹的脚本语言。使用该语言不必编写过多的代码，同时又具有闭包和动态语言中的其他特性。 Groovy与Java 完全兼容Java的语法 分号是可选的 类、方法默认是public 编译器给属性自动添加getter/setter方法 属性可以直接用点号获取 最后一个表达式的值会被作为返回值 ==等同于equals()，不会有NullPointerExceptions Groovy高效特性 自带assert语句 可选类型定义 可选的括号 字符串 集合API 闭包 创建Groovy项目File-New Project-Gradle Next Next Next Groovy Console 示例代码可选类型定义 1def version = 1 assert 1assert version == 2 括号是可选的 1println version 字符串 12345def s1 = 'kimisme'def s2 = "gradle version is $&#123;version&#125;"def s3 = '''kimisme''' 集合api 1234def buildTools = ['ant','maven']buildTools &lt;&lt; 'gradle'assert buildTools.getClass() == ArrayListassert buildTools.size() == 3 map 123456def buildYears = ['ant':2000,'maven':2004]buildYears.gradle = 2009println buildYears.antprintln buildYears['gradle']println buildYears.getClass() 闭包 不带参数闭包 12345678910def c1 = &#123; v -&gt; println v&#125;def method1(Closure closure)&#123; closure('param')&#125;method1(c1) 带参数闭包 123456789def c2 = &#123; println 'hello'&#125;def method2(Closure closure)&#123; closure()&#125;method2(c2)]]></content>
+      <categories>
+        <category>Gradle</category>
+      </categories>
+      <tags>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Gradle系列(2)-安装]]></title>
+    <url>%2F2017%2F09%2F24%2Fgradle-install%2F</url>
+    <content type="text"><![CDATA[前言Gradle安装 准备Gradle可以允许在所有主要操作系统上，并且需要Java JDK or JRE 7或者更高版本。运行java -version验证。 从官网https://gradle.org`下载Gradle安装包，然后解压到指定目录 Gradle目录结构 bin：里面有两个可执行文件，windows下的，和linux下的 init.d：所有的初始化脚本放到这里，每次执行构建之前都会把这个目录下的所有脚本执行一遍 lib：gradle本身依赖的一些jar包 meida：里面是一些图标文件 配置 配置环境变量：Gradle_HOME=C:**\Gradle\gradle-3.3-bin 添加到Path：%Gradle_HOME\bin%; 验证是否安装成功：gradle-v 1234567891011 ------------------------------------------------------------Gradle 3.3------------------------------------------------------------Build time: 2017-01-03 15:31:04 UTCRevision: 075893a3d0798c0c1f322899b41ceca82e4e134bGroovy: 2.4.7Ant: Apache Ant(TM) version 1.9.6 compiled on June 29 2015JVM: 1.8.0_121 (Oracle Corporation 25.121-b13)OS: Windows 7 6.1 amd64]]></content>
+      <categories>
+        <category>Gradle</category>
+      </categories>
+      <tags>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Gradle系列(1)-构建工具]]></title>
     <url>%2F2017%2F09%2F24%2Fgradle-build-tool%2F</url>
     <content type="text"><![CDATA[前言Gradle为我们解决了什么问题 石器时代 在构建工具出现前，开发一个项目的流程是：将依赖的jar包放到lib目录下；独个运行测试用例；使用Eclipse导出war包，通过ftp上传到服务器，再解压运行 构建工具 主流的构建工具主义有三个。最早出现的是Ant，它只提供了编译、测试、打包这三个最基本的功能。随后出现的Maven，在Ant的基础上提供了依赖管理和发布的功能。Gradle在Maven的基础上又进了一步，用Groovy来管理构建脚本，不再使用XML这种标记性语言来构建脚本，因为项目大了容易啰嗦和臃肿，难以管理。而使用特定领域语言来管理脚本，具有更高的灵活性和可扩展性 Gradle是什么一个开源的项目自动化构建工具，建立在Apache Ant和Apache Maven概念的基础上，并引入了基于Groovy的特定领域语言(DSL)，而不是使用XML形式管理构建脚本。 Gradle能为我们做什么它是一个构建工具，就具有构建工具的功能。依赖管理，自动化测试，打包，发布到指定地方]]></content>

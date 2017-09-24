@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kimisme.com/"/>
-  <updated>2017-09-24T06:11:23.267Z</updated>
+  <updated>2017-09-24T07:40:09.542Z</updated>
   <id>http://kimisme.com/</id>
   
   <author>
@@ -15,6 +15,50 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Gradle系列(3)-Groovy特性</title>
+    <link href="http://kimisme.com/2017/09/24/gradle-groovy-grammar/"/>
+    <id>http://kimisme.com/2017/09/24/gradle-groovy-grammar/</id>
+    <published>2017-09-24T07:16:02.000Z</published>
+    <updated>2017-09-24T07:40:09.542Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Groovy特性</p><a id="more"></a><h2 id="Groovy是什么"><a href="#Groovy是什么" class="headerlink" title="Groovy是什么"></a>Groovy是什么</h2><p>Groovy是用于Java虚拟机的一种敏捷的动态语言，它是一种成熟的面向对象编程语言，既可以用于面向对象编程，又可以用作纯粹的脚本语言。使用该语言不必编写过多的代码，同时又具有闭包和动态语言中的其他特性。</p><h2 id="Groovy与Java"><a href="#Groovy与Java" class="headerlink" title="Groovy与Java"></a>Groovy与Java</h2><ul><li>完全兼容Java的语法</li><li>分号是可选的</li><li>类、方法默认是public</li><li>编译器给属性自动添加getter/setter方法</li><li>属性可以直接用点号获取</li><li>最后一个表达式的值会被作为返回值</li><li>==等同于equals()，不会有NullPointerExceptions</li></ul><h2 id="Groovy高效特性"><a href="#Groovy高效特性" class="headerlink" title="Groovy高效特性"></a>Groovy高效特性</h2><ul><li>自带assert语句</li><li>可选类型定义</li><li>可选的括号</li><li>字符串</li><li>集合API</li><li>闭包</li></ul><h2 id="创建Groovy项目"><a href="#创建Groovy项目" class="headerlink" title="创建Groovy项目"></a>创建Groovy项目</h2><p><strong>File-New Project-Gradle</strong></p><p><img src="http://owrsf98kb.bkt.clouddn.com/20170924003.png?" alt="20170924003"></p><p><strong>Next</strong></p><p><img src="http://owrsf98kb.bkt.clouddn.com/20170924004.png?" alt="20170924004"></p><p><strong>Next</strong></p><p><img src="http://owrsf98kb.bkt.clouddn.com/20170924005.png?" alt="20170924005"></p><p><strong>Next</strong></p><p><img src="http://owrsf98kb.bkt.clouddn.com/20170924006.png?" alt="20170924006"></p><p><strong>Groovy Console</strong></p><p><img src="http://owrsf98kb.bkt.clouddn.com/20170924007.png?" alt="20170924007"></p><h2 id="示例代码"><a href="#示例代码" class="headerlink" title="示例代码"></a>示例代码</h2><p><strong>可选类型定义</strong></p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">def version = <span class="number">1</span></div></pre></td></tr></table></figure><p><strong>assert</strong></p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">assert</span> version == <span class="number">2</span></div></pre></td></tr></table></figure><p><strong>括号是可选的</strong></p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">println version</div></pre></td></tr></table></figure><p><strong>字符串</strong></p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">def s1 = <span class="string">'kimisme'</span></div><div class="line">def s2 = <span class="string">"gradle version is $&#123;version&#125;"</span></div><div class="line">def s3 = <span class="string">''</span><span class="string">'kim</span></div><div class="line"><span class="string">is</span></div><div class="line"><span class="string">me'</span><span class="string">''</span></div></pre></td></tr></table></figure><p><strong>集合api</strong></p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">def buildTools = [<span class="string">'ant'</span>,<span class="string">'maven'</span>]</div><div class="line">buildTools &lt;&lt; <span class="string">'gradle'</span></div><div class="line"><span class="keyword">assert</span> buildTools.getClass() == ArrayList</div><div class="line"><span class="keyword">assert</span> buildTools.size() == <span class="number">3</span></div></pre></td></tr></table></figure><p><strong>map</strong></p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">def buildYears = [<span class="string">'ant'</span>:<span class="number">2000</span>,<span class="string">'maven'</span>:<span class="number">2004</span>]</div><div class="line">buildYears.gradle = <span class="number">2009</span></div><div class="line"></div><div class="line">println buildYears.ant</div><div class="line">println buildYears[<span class="string">'gradle'</span>]</div><div class="line">println buildYears.getClass()</div></pre></td></tr></table></figure><p><strong>闭包</strong></p><p>不带参数闭包</p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">def c1 = &#123;</div><div class="line">    v -&gt;</div><div class="line">        println v</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function">def <span class="title">method1</span><span class="params">(Closure closure)</span></span>&#123;</div><div class="line">    closure(<span class="string">'param'</span>)</div><div class="line">&#125;</div><div class="line"></div><div class="line">method1(c1)</div></pre></td></tr></table></figure><p>带参数闭包</p><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">def c2 = &#123;</div><div class="line">    println <span class="string">'hello'</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function">def <span class="title">method2</span><span class="params">(Closure  closure)</span></span>&#123;</div><div class="line">    closure()</div><div class="line">&#125;</div><div class="line"></div><div class="line">method2(c2)</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Groovy特性&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Gradle" scheme="http://kimisme.com/categories/Gradle/"/>
+    
+    
+      <category term="Gradle" scheme="http://kimisme.com/tags/Gradle/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Gradle系列(2)-安装</title>
+    <link href="http://kimisme.com/2017/09/24/gradle-install/"/>
+    <id>http://kimisme.com/2017/09/24/gradle-install/</id>
+    <published>2017-09-24T06:29:22.000Z</published>
+    <updated>2017-09-24T06:43:30.330Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Gradle安装</p><a id="more"></a><h2 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h2><p>Gradle可以允许在所有主要操作系统上，并且需要<code>Java JDK or JRE 7</code>或者更高版本。运行<code>java -version</code>验证。</p><p>从官网<a href="https://gradle.org" target="_blank" rel="external">https://gradle.org`</a>下载Gradle安装包，然后解压到指定目录</p><h2 id="Gradle目录结构"><a href="#Gradle目录结构" class="headerlink" title="Gradle目录结构"></a>Gradle目录结构</h2><ul><li>bin：里面有两个可执行文件，windows下的，和linux下的</li><li>init.d：所有的初始化脚本放到这里，每次执行构建之前都会把这个目录下的所有脚本执行一遍</li><li>lib：gradle本身依赖的一些jar包</li><li>meida：里面是一些图标文件</li></ul><h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><ul><li>配置环境变量：Gradle_HOME=C:**\Gradle\gradle-3.3-bin</li><li>添加到Path：%Gradle_HOME\bin%;</li><li>验证是否安装成功：gradle-v</li></ul><figure class="highlight dos"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"> ------------------------------------------------------------</div><div class="line">Gradle <span class="number">3</span>.<span class="number">3</span></div><div class="line">------------------------------------------------------------</div><div class="line"></div><div class="line">Build <span class="built_in">time</span>:   <span class="number">2017</span>-<span class="number">01</span>-<span class="number">03</span> <span class="number">15</span>:<span class="number">31</span>:<span class="number">04</span> UTC</div><div class="line"><span class="function">Revision:     075893<span class="title">a3d0798c0c1f322899b41ceca82e4e134b</span></span></div><div class="line"><span class="function"></span></div><div class="line"><span class="function"><span class="title">Groovy</span>:       2.4.7</span></div><div class="line"><span class="function"><span class="title">Ant</span>:          <span class="title">Apache</span> <span class="title">Ant</span>(<span class="title">TM</span>) <span class="title">version</span> 1.9.6 <span class="title">compiled</span> <span class="title">on</span> <span class="title">June</span> 29 2015</span></div><div class="line"><span class="function"><span class="title">JVM</span>:          1.8.0<span class="title">_121</span> (<span class="title">Oracle</span> <span class="title">Corporation</span> 25.121-<span class="title">b13</span>)</span></div><div class="line"><span class="function"><span class="title">OS</span>:           <span class="title">Windows</span> 7 6.1 <span class="title">amd64</span></span></div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Gradle安装&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Gradle" scheme="http://kimisme.com/categories/Gradle/"/>
+    
+    
+      <category term="Gradle" scheme="http://kimisme.com/tags/Gradle/"/>
+    
+  </entry>
   
   <entry>
     <title>Gradle系列(1)-构建工具</title>
@@ -388,50 +432,6 @@
     </summary>
     
       <category term="Java-Basic" scheme="http://kimisme.com/categories/Java-Basic/"/>
-    
-    
-      <category term="Java" scheme="http://kimisme.com/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>C#程序破解</title>
-    <link href="http://kimisme.com/2017/06/10/dot-net-app-crack/"/>
-    <id>http://kimisme.com/2017/06/10/dot-net-app-crack/</id>
-    <published>2017-06-10T06:23:19.000Z</published>
-    <updated>2017-06-10T07:04:52.363Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>今天在整理磁盘的时候，看到了一个文件，想起来是之前玩破解时留下的。本来想网上找一款软件来写写，最后偷懒还是自己写个简单的应用程序自娱自乐好了。</p><a id="more"></a><h2 id="准备工具"><a href="#准备工具" class="headerlink" title="准备工具"></a>准备工具</h2><p>首先是电脑安装了宇宙最强IDE(<strong>Visual Studio</strong>)，它在本次的作用仅仅只是为了编译一个.Net应用程序，来模拟我们在百度上下载到的一款有C#编写的应用程序(当然网上肯定不会有这种商业软件，他们大部分都是经过代码混淆，软件加壳)。然后我们需要准备一款.Net的反汇编工具(<strong>Graywolf</strong>)，用来查看源码(源码不一定看的到，IL语言肯定是可以的)</p><h2 id="我们的测试软件"><a href="#我们的测试软件" class="headerlink" title="我们的测试软件"></a>我们的测试软件</h2><p>我们用<code>宇宙最强IDE</code>创建一个Winform程序，然后拖一个按钮，编写以下事件</p><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">namespace</span> <span class="title">WinApp</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">public</span> <span class="keyword">partial</span> <span class="keyword">class</span> <span class="title">Form1</span> : <span class="title">Form</span></div><div class="line">    &#123;</div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="title">Form1</span>(<span class="params"></span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            InitializeComponent();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">btnAlert_Click</span>(<span class="params"><span class="keyword">object</span> sender, EventArgs e</span>)</span></div><div class="line"><span class="function">        </span>&#123;</div><div class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= <span class="number">3</span>; i++)</div><div class="line">            &#123;</div><div class="line">                MessageBox.Show(i+<span class="string">"你好啊"</span>);</div><div class="line">            &#125;               </div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure><h2 id="运行我们的测试程序"><a href="#运行我们的测试程序" class="headerlink" title="运行我们的测试程序"></a>运行我们的测试程序</h2><p>它的功能很简单，就是点击按钮，会弹出小窗口<code>1你好啊</code>，<code>2你好啊</code>,<code>3你好啊</code></p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610015.png" alt="20170610015"></p><h2 id="我们的目的"><a href="#我们的目的" class="headerlink" title="我们的目的"></a>我们的目的</h2><p>我们要让这个应用程序中的按钮被点击的时候，弹出5次<code>Hello World</code></p><h2 id="开始反编译"><a href="#开始反编译" class="headerlink" title="开始反编译"></a>开始反编译</h2><p>打开我们的反编译工具(<strong>GrayWolf</strong>)，并导入我们的应用程序(<strong>WinApp.exe</strong>)</p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610016.png" alt="20170610016"></p><p>左边框框里的是.Net平台的中间语言IL，这是.Net实现跨语言，跨平台的关键</p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610017.png" alt="20170610017"></p><p>我们要找的就是按钮，一个可以弹出信息的按钮，我们一眼就看到了</p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610018.png" alt="20170610018"></p><p>好的，接下来我们就开始修改代码，修改之后记得保存</p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610019.png" alt="20170610019"></p><p>再次运行我们保存的文件</p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610020.png" alt="20170610020"></p><h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>破解.Net程序和破解Java程序是类似的。在.Net中存在一种叫<strong>IL语言</strong>的语言，在Java中也同样存在一种叫<strong>字节码</strong> 的东西。它们都不过是保存在文本里面的十六进制罢了，既然<strong>CLR</strong>和<strong>JVM</strong>可以读懂这些，我们就又办法修改它们。比如你的同学开发了一款管理系统桌面程序，但是要登录。那么你就可以用小技巧，让它登录失去意义。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;今天在整理磁盘的时候，看到了一个文件，想起来是之前玩破解时留下的。本来想网上找一款软件来写写，最后偷懒还是自己写个简单的应用程序自娱自乐好了。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="DotNet" scheme="http://kimisme.com/categories/DotNet/"/>
-    
-    
-      <category term="C#" scheme="http://kimisme.com/tags/C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>IDEA备忘录</title>
-    <link href="http://kimisme.com/2017/06/10/cheat-sheet-intellij-ieda/"/>
-    <id>http://kimisme.com/2017/06/10/cheat-sheet-intellij-ieda/</id>
-    <published>2017-06-10T02:26:20.000Z</published>
-    <updated>2017-06-10T09:29:35.656Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近准备入手IDEA玩玩，因为之前有过一段时间热衷于使用PyCharm开发Python，后来有段时间没写Python现在又忘记差不多了。这次准备边学习，边记录。</p><a id="more"></a><h2 id="主题配置"><a href="#主题配置" class="headerlink" title="主题配置"></a>主题配置</h2><h3 id="Sublime-Monokai主题"><a href="#Sublime-Monokai主题" class="headerlink" title="Sublime-Monokai主题"></a>Sublime-Monokai主题</h3><p><strong>下载主题包</strong></p><p><a href="https://github.com/y3sh/Intellij-Colors-Sublime-Monokai" target="_blank" rel="external">https://github.com/y3sh/Intellij-Colors-Sublime-Monokai</a></p><p><strong>导入主题包</strong></p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610011.png" alt="20170610011"></p><p><strong>配置主题包</strong></p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610012.png" alt="20170610012"></p><h3 id="护眼主题"><a href="#护眼主题" class="headerlink" title="护眼主题"></a>护眼主题</h3><p><strong>设置字体大小</strong></p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610013.png" alt="20170610013"></p><p><strong>设置背景色</strong> </p><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610014.png" alt="20170610014"></p><h3 id="其他主题"><a href="#其他主题" class="headerlink" title="其他主题"></a>其他主题</h3><p><a href="http://www.easycolor.cc/index.php/Index/exlist/tid/1" target="_blank" rel="external">http://www.easycolor.cc/index.php/Index/exlist/tid/1</a></p><h2 id="优化配置"><a href="#优化配置" class="headerlink" title="优化配置"></a>优化配置</h2><h3 id="显示行号"><a href="#显示行号" class="headerlink" title="显示行号"></a>显示行号</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610001.png" alt="20170610001"></p><h3 id="取消拼音检查"><a href="#取消拼音检查" class="headerlink" title="取消拼音检查"></a>取消拼音检查</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610002.png" alt="20170610002"></p><h3 id="关闭自动保存"><a href="#关闭自动保存" class="headerlink" title="关闭自动保存"></a>关闭自动保存</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610003.png" alt="20170610003"></p><h3 id="未保存显示星号"><a href="#未保存显示星号" class="headerlink" title="未保存显示星号"></a>未保存显示星号</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610004.png" alt="20170610004"></p><h3 id="开启序列号检测"><a href="#开启序列号检测" class="headerlink" title="开启序列号检测"></a>开启序列号检测</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610005.png" alt="20170610005"></p><h3 id="修改资源文件的编码"><a href="#修改资源文件的编码" class="headerlink" title="修改资源文件的编码"></a>修改资源文件的编码</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610006.png" alt="20170610006"></p><h3 id="修改快捷键"><a href="#修改快捷键" class="headerlink" title="修改快捷键"></a>修改快捷键</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610007.png" alt="20170610007"></p><h3 id="隐藏没用的文件"><a href="#隐藏没用的文件" class="headerlink" title="隐藏没用的文件"></a>隐藏没用的文件</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610009.png" alt="20170610009"></p><h3 id="代码提示不区分大小写"><a href="#代码提示不区分大小写" class="headerlink" title="代码提示不区分大小写"></a>代码提示不区分大小写</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610008.png" alt="20170610008"></p><h3 id="自动import类型"><a href="#自动import类型" class="headerlink" title="自动import类型"></a>自动import类型</h3><p><img src="http://om9xacvdp.bkt.clouddn.com/20170610010.png" alt="20170610010"></p><h2 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h2><p><strong>参考文章</strong></p><p><a href="http://blog.csdn.net/dc_726/article/details/42784275" target="_blank" rel="external">http://blog.csdn.net/dc_726/article/details/42784275</a></p><p><strong>创建main()方法</strong></p><p>方式一：输入<code>main</code>，然后按快捷键<code>Ctrl+J</code><br>方式二：输入<code>psvm</code></p><p><strong>快速System.out.println()</strong></p><p>输入<code>sout</code></p><p><strong>快速for(int i;i&lt;2;i++)循环</strong></p><p>输入<code>fori</code></p><p><strong>快速重构</strong></p><p>选中需要重构的代码块，然后按快捷键<code>Ctrl+Shift+Alt+T</code></p><p><strong>快速重命名</strong></p><p>选中需要重命名的变量或方法名，然后按快捷键<code>Shift+F6</code></p><p><strong>代码格式化</strong></p><p>方法一：按快捷键<code>Ctrl+Shift+Alt+L</code><br>方法二：按快捷键<code>Ctrl+Shift+A</code>，然后输入<code>reformat code</code></p><p><strong>删除某一行</strong></p><p>按快捷键<code>Ctrl+Y</code></p><p><strong>代码注释</strong></p><p>方式一：快捷键<code>Ctrl+/</code><br>方式二：快捷键<code>Ctrl+Shift+/</code></p><p><strong>快速解决</strong></p><p>快捷键<code>Alt+Enter</code></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;最近准备入手IDEA玩玩，因为之前有过一段时间热衷于使用PyCharm开发Python，后来有段时间没写Python现在又忘记差不多了。这次准备边学习，边记录。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Cheat-Sheet" scheme="http://kimisme.com/categories/Cheat-Sheet/"/>
     
     
       <category term="Java" scheme="http://kimisme.com/tags/Java/"/>
