@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Gradle系列(1)-构建工具]]></title>
+    <url>%2F2017%2F09%2F24%2Fgradle-build-tool%2F</url>
+    <content type="text"><![CDATA[前言Gradle为我们解决了什么问题 石器时代 在构建工具出现前，开发一个项目的流程是：将依赖的jar包放到lib目录下；独个运行测试用例；使用Eclipse导出war包，通过ftp上传到服务器，再解压运行 构建工具 主流的构建工具主义有三个。最早出现的是Ant，它只提供了编译、测试、打包这三个最基本的功能。随后出现的Maven，在Ant的基础上提供了依赖管理和发布的功能。Gradle在Maven的基础上又进了一步，用Groovy来管理构建脚本，不再使用XML这种标记性语言来构建脚本，因为项目大了容易啰嗦和臃肿，难以管理。而使用特定领域语言来管理脚本，具有更高的灵活性和可扩展性 Gradle是什么一个开源的项目自动化构建工具，建立在Apache Ant和Apache Maven概念的基础上，并引入了基于Groovy的特定领域语言(DSL)，而不是使用XML形式管理构建脚本。 Gradle能为我们做什么它是一个构建工具，就具有构建工具的功能。依赖管理，自动化测试，打包，发布到指定地方]]></content>
+      <categories>
+        <category>Gradle</category>
+      </categories>
+      <tags>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Maven系列(7)-pom元素说明]]></title>
     <url>%2F2017%2F09%2F23%2Fmaven-pom-xml%2F</url>
     <content type="text"><![CDATA[前言介绍pom文件 包含了pom的一些约束信息 1234&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt;&lt;/project&gt; 12345&lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&gt; &lt;!-- 指定了当前pom的版本，它是必须的 --&gt; &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;&lt;/project&gt; 项目创建的包名 1&lt;groupId&gt;com.kimisme.app&lt;/groupId&gt; 项目名 1&lt;artifactId&gt;MavenTest&lt;/artifactId&gt; 版本号： shapshot快照 alpha内侧版本 beta公测 Release稳定 GA正式发布 1&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt; 打包类型：默认jar。其他类型：war，zip，pom 1&lt;packaging&gt;jar&lt;/packaging&gt; 其他信息123456789101112&lt;!-- 项目的描述名；产生项目文档是才使用 --&gt;&lt;name&gt;&lt;/name&gt;&lt;!-- 项目的地址 --&gt;&lt;url&gt;&lt;/url&gt;&lt;!-- 项目的描述 --&gt;&lt;description&gt;&lt;/description&gt;&lt;!-- 开发人员列表 --&gt;&lt;developers&gt;&lt;/developers&gt;&lt;!-- 许可证信息，如用到了一些开源项目 --&gt;&lt;licenses&gt;&lt;/licenses&gt;&lt;!-- 组织信息 --&gt;&lt;organization&gt;&lt;/organization&gt;]]></content>

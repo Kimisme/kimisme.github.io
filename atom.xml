@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://kimisme.com/"/>
-  <updated>2017-09-23T12:18:48.509Z</updated>
+  <updated>2017-09-24T06:11:23.267Z</updated>
   <id>http://kimisme.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Gradle系列(1)-构建工具</title>
+    <link href="http://kimisme.com/2017/09/24/gradle-build-tool/"/>
+    <id>http://kimisme.com/2017/09/24/gradle-build-tool/</id>
+    <published>2017-09-24T05:57:41.000Z</published>
+    <updated>2017-09-24T06:11:23.267Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Gradle为我们解决了什么问题</p><a id="more"></a><h2 id="石器时代"><a href="#石器时代" class="headerlink" title="石器时代"></a>石器时代</h2><p><img src="http://owrsf98kb.bkt.clouddn.com/20170924002.png?" alt="20170924002"></p><p>在构建工具出现前，开发一个项目的流程是：将依赖的jar包放到lib目录下；独个运行测试用例；使用Eclipse导出war包，通过ftp上传到服务器，再解压运行</p><h2 id="构建工具"><a href="#构建工具" class="headerlink" title="构建工具"></a>构建工具</h2><p><img src="http://owrsf98kb.bkt.clouddn.com/20170924001.png" alt="20170924001"></p><p>主流的构建工具主义有三个。最早出现的是Ant，它只提供了编译、测试、打包这三个最基本的功能。随后出现的Maven，在Ant的基础上提供了依赖管理和发布的功能。Gradle在Maven的基础上又进了一步，用Groovy来管理构建脚本，不再使用XML这种标记性语言来构建脚本，因为项目大了容易啰嗦和臃肿，难以管理。而使用特定领域语言来管理脚本，具有更高的灵活性和可扩展性</p><h2 id="Gradle是什么"><a href="#Gradle是什么" class="headerlink" title="Gradle是什么"></a>Gradle是什么</h2><p>一个开源的项目自动化构建工具，建立在Apache Ant和Apache Maven概念的基础上，并引入了基于Groovy的特定领域语言(DSL)，而不是使用XML形式管理构建脚本。</p><h2 id="Gradle能为我们做什么"><a href="#Gradle能为我们做什么" class="headerlink" title="Gradle能为我们做什么"></a>Gradle能为我们做什么</h2><p>它是一个构建工具，就具有构建工具的功能。<br>依赖管理，自动化测试，打包，发布到指定地方</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h2&gt;&lt;p&gt;Gradle为我们解决了什么问题&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Gradle" scheme="http://kimisme.com/categories/Gradle/"/>
+    
+    
+      <category term="Gradle" scheme="http://kimisme.com/tags/Gradle/"/>
+    
+  </entry>
   
   <entry>
     <title>Maven系列(7)-pom元素说明</title>
@@ -413,27 +435,6 @@
     
     
       <category term="Java" scheme="http://kimisme.com/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>metronic-overview</title>
-    <link href="http://kimisme.com/2017/06/07/metronic-overview/"/>
-    <id>http://kimisme.com/2017/06/07/metronic-overview/</id>
-    <published>2017-06-07T14:50:47.000Z</published>
-    <updated>2017-06-07T14:52:01.008Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://segmentfault.com/a/1190000006673582" target="_blank" rel="external">https://segmentfault.com/a/1190000006673582</a></p>]]></content>
-    
-    <summary type="html">
-    
-      
-      
-        &lt;h2 id=&quot;参考文章&quot;&gt;&lt;a href=&quot;#参考文章&quot; class=&quot;headerlink&quot; title=&quot;参考文章&quot;&gt;&lt;/a&gt;参考文章&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;https://segmentfault.com/a/1190000006673582&quot; target=&quot;
-      
-    
-    </summary>
-    
     
   </entry>
   
