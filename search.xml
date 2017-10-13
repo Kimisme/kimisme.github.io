@@ -1,6 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[Gradle系列(9)-生命周期]]></title>
+    <url>%2F2017%2F09%2F28%2Fgradle-life-cycle%2F</url>
+    <content type="text"><![CDATA[初始化，配置，执行]]></content>
+      <categories>
+        <category>Gradle</category>
+      </categories>
+      <tags>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Gradle系列(8)-自定义任务]]></title>
+    <url>%2F2017%2F09%2F28%2Fgradle-custom-task%2F</url>
+    <content type="text"><![CDATA[前言使用groovy自定义gradle任务 自动生成java项目结构1234567891011121314def createDir = &#123; path -&gt; File dir = new File(path); if(!dir.exists())&#123; dir.mkdirs(); &#125;&#125;task makeJavaDir()&#123; def paths = ['src/main/java','src/main/resources','src/test/java','src/test/resources']; doFirst &#123; paths.forEach(createDir); &#125;&#125; 自动生成javaWeb项目结构1234567task makeWebDir()&#123; dependsOn 'makeJavaDir'; def paths = ['src/main/webapp','src/test/webapp']; doLast&#123; paths.forEach(createDir); &#125;&#125;]]></content>
+      <categories>
+        <category>Gradle</category>
+      </categories>
+      <tags>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Gradle系列(7)-构建脚本]]></title>
+    <url>%2F2017%2F09%2F26%2Fgradle-build-script%2F</url>
+    <content type="text"><![CDATA[##前言 构建块 Gradle构建中的两个基本概念是项目(project)和任务(task)，每个构建至少包含一个项目，项目中包含一个或多个任务。在多项目构建中，一个项目可以依赖于其他项目；类似的，任务可以形成一个依赖关系图来确保他们的执行顺序 项目(project)一个项目代表一个正在构建的组件(比如一个jar文件)，当构建启动后，Gradle会基于build.gradle实例化一个org.gradle.api.Project类，并且能够通过project变量使其隐式可用 Project的常用属性：group，name，version group &#39;com.kimisme.gradle&#39;等同于project.group &#39;com.kimisme.gradle&#39; Project的常用方法：apply，dependencies，repositories，task apply plugin: &#39;java&#39;等同于project.apply( plugin: &#39;java&#39;) Project中属性的其他配置方式：ext，gradle.properties 任务(task)任务对应org.gradle.api.Task。主要包括任务动作和任务依赖。任务动作定义了一个最小的工作单元。可用定义依赖于其他任务、动作序列和执行条件。 这些都是jar插件自带的task task中的常用方法：dependsOn task中的常用方法：doFirst，doLast &lt;&lt;]]></content>
+      <categories>
+        <category>Gradle</category>
+      </categories>
+      <tags>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Gradle系列(6)-使用Gradle构建JavaWeb项目]]></title>
+    <url>%2F2017%2F09%2F25%2Fgradle-build-java-web-project%2F</url>
+    <content type="text"><![CDATA[前言使用Gradle构建Java项目 脚下留心新建项目 Next Next Next 这是构建好的项目 File-Project Structure war打包 运行]]></content>
+      <categories>
+        <category>Gradle</category>
+      </categories>
+      <tags>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[Gradle系列(5)-使用Gradle构建Java项目]]></title>
+    <url>%2F2017%2F09%2F25%2Fgradle-build-java-project%2F</url>
+    <content type="text"><![CDATA[前言使用Gradle构建Java项目 脚下留心新建Gradle项目 Next Next 设置项目路径 设置源代码文件夹 添加包名 编写测试类 选择jar打包 执行jar文件]]></content>
+      <categories>
+        <category>Gradle</category>
+      </categories>
+      <tags>
+        <tag>Gradle</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[Gradle系列(3)-Groovy特性]]></title>
     <url>%2F2017%2F09%2F24%2Fgradle-groovy-grammar%2F</url>
     <content type="text"><![CDATA[前言Groovy特性 Groovy是什么Groovy是用于Java虚拟机的一种敏捷的动态语言，它是一种成熟的面向对象编程语言，既可以用于面向对象编程，又可以用作纯粹的脚本语言。使用该语言不必编写过多的代码，同时又具有闭包和动态语言中的其他特性。 Groovy与Java 完全兼容Java的语法 分号是可选的 类、方法默认是public 编译器给属性自动添加getter/setter方法 属性可以直接用点号获取 最后一个表达式的值会被作为返回值 ==等同于equals()，不会有NullPointerExceptions Groovy高效特性 自带assert语句 可选类型定义 可选的括号 字符串 集合API 闭包 创建Groovy项目File-New Project-Gradle Next Next Next Groovy Console 示例代码可选类型定义 1def version = 1 assert 1assert version == 2 括号是可选的 1println version 字符串 12345def s1 = 'kimisme'def s2 = "gradle version is $&#123;version&#125;"def s3 = '''kimisme''' 集合api 1234def buildTools = ['ant','maven']buildTools &lt;&lt; 'gradle'assert buildTools.getClass() == ArrayListassert buildTools.size() == 3 map 123456def buildYears = ['ant':2000,'maven':2004]buildYears.gradle = 2009println buildYears.antprintln buildYears['gradle']println buildYears.getClass() 闭包 不带参数闭包 12345678910def c1 = &#123; v -&gt; println v&#125;def method1(Closure closure)&#123; closure('param')&#125;method1(c1) 带参数闭包 123456789def c2 = &#123; println 'hello'&#125;def method2(Closure closure)&#123; closure()&#125;method2(c2)]]></content>
@@ -841,9 +896,20 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[SpringBoot系列-测试]]></title>
+    <url>%2F2017%2F03%2F31%2Fspringboot-starter-test%2F</url>
+    <content type="text"><![CDATA[前言SpringBoot项目的测试 前期准备SpringBoot入门 项目结构1234567891011--src/main/java/com/kimisme/tutorial--src/main/java/com/kimisme/tutorial/Application.java--src/main/java/com/kimisme/tutorial/controller--src/main/java/com/kimisme/tutorial/controller/HelloController.java--src/main/test/com/kimisme/tutorial--src/main/test/com/kimisme/tutorial/ApplicationTest.java--src/main/test/com/kimisme/tutorial/controller--src/main/test/com/kimisme/tutorial/controller/HelloControllerTest.java--build.gradle ApplicationTest.java123456789@RunWith(SpringRunner.class)@SpringBootTestpublic class ApplicationTest &#123; @Test public void contextLoads()&#123; &#125;&#125; HelloControllerTest.java123456789101112131415@RunWith(SpringRunner.class)@SpringBootTest@AutoConfigureMockMvcpublic class HelloControllerTest &#123; @Autowired private MockMvc mockMvc; @Test public void testHello() throws Exception &#123; mockMvc.perform(MockMvcRequestBuilders.get("/hello").accept(MediaType.APPLICATION_JSON)) .andExpect(MockMvcResultMatchers.status().isOk()) .andExpect(MockMvcResultMatchers.content().string("Hello Spring Boot")); &#125;&#125;]]></content>
+      <categories>
+        <category>SpringBoot</category>
+      </categories>
+      <tags>
+        <tag>Spring</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[SpringBoot系列-入门]]></title>
-    <url>%2F2017%2F03%2F31%2Fspringboot-getstart%2F</url>
-    <content type="text"><![CDATA[前言这是springboot的一个入门案例 简介为什么诞生了Spring Boot技术 spring 官方网站本身使用Spring 框架开发，随着功能以及业务逻辑的日益复杂，应用伴随着大量的XML配置文件以及复杂的Bean依赖关系。随着Spring 3.0的发布，Spring IO团队主键开始摆脱XML配置文件，并且在开发过程中大量使用“约定优先配置”（convention over configuration）的思想来摆脱Spring框架中各种复杂的配置，衍生了Java Config。Spring Boot正是在这样的一个背景下被抽象出来的开发框架，它本身并不提供Spring框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于Spring框架的应用程序。也就是说，它并不是用来替代Spring的解决方案，而是和Spring框架紧密结合用于提升Spring开发者体验的工具。同时它集成了大量常用的第三方库配置（例如Jackson, JDBC, Mongo, Redis, Mail等等），Spring Boot应用中这些第三方库几乎可以零配置的开箱即用（out-of-the-box），大部分的Spring Boot应用都只需要非常少量的配置代码，开发者能够更加专注于业务逻辑。 项目结构注意启动类必须在最顶层，本次项目中的启动类是Program.java 123456--src/main/java----com.easy------Program.java----com.easy.controllers------HomeController.java--build.gradle 引入依赖环境12compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.2.RELEASE'compile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.2.RELEASE' 编写启动类123456@SpringBootApplicationpublic class Program &#123; public static void main(String[] args) &#123; SpringApplication.run(Program.class, args); &#125;&#125; 编写控制层123456789101112@RestControllerpublic class HomeController &#123; /* * 访问http://localhost:8080/ * 访问http://localhost:8080 */ @RequestMapping public String hello() &#123; return "Hello Spring-Boot"; &#125;&#125;]]></content>
+    <url>%2F2017%2F03%2F31%2Fspringboot-getstar%2F</url>
+    <content type="text"><![CDATA[前言SpringBoot入门 简介为什么诞生了Spring Boot技术 spring 官方网站本身使用Spring 框架开发，随着功能以及业务逻辑的日益复杂，应用伴随着大量的XML配置文件以及复杂的Bean依赖关系。随着Spring 3.0的发布，Spring IO团队主键开始摆脱XML配置文件，并且在开发过程中大量使用“约定优先配置”（convention over configuration）的思想来摆脱Spring框架中各种复杂的配置，衍生了Java Config。Spring Boot正是在这样的一个背景下被抽象出来的开发框架，它本身并不提供Spring框架的核心特性以及扩展功能，只是用于快速、敏捷地开发新一代基于Spring框架的应用程序。也就是说，它并不是用来替代Spring的解决方案，而是和Spring框架紧密结合用于提升Spring开发者体验的工具。同时它集成了大量常用的第三方库配置（例如Jackson, JDBC, Mongo, Redis, Mail等等），Spring Boot应用中这些第三方库几乎可以零配置的开箱即用（out-of-the-box），大部分的Spring Boot应用都只需要非常少量的配置代码，开发者能够更加专注于业务逻辑。 项目结构注意启动类必须在最顶层，本次项目中的启动类是Program.java 12345--src/main/java/com/kimisme/tutorial--src/main/java/com/kimisme/tutorial/Application.java--src/main/java/com/kimisme/tutorial/controller--src/main/java/com/kimisme/tutorial/controller/HelloController.java--build.gradle build.gradle123456789101112apply plugin:'java'repositories&#123; maven&#123; url 'http://maven.aliyun.com/nexus/content/groups/public/' &#125;&#125;dependencies&#123; compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.2.RELEASE' testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.5.2.RELEASE'&#125; Application.java123456@SpringBootApplicationpublic class Program &#123; public static void main(String[] args) &#123; SpringApplication.run(Program.class, args); &#125;&#125; HelloController.java12345678@RestControllerpublic class HelloController &#123; @RequestMapping(value="/hello") public String hello()&#123; return "Hello Spring Boot"; &#125;&#125; 访问在浏览器输入http://localhost:8080/hello,可以看到Hello Spring Boot]]></content>
       <categories>
         <category>SpringBoot</category>
       </categories>
